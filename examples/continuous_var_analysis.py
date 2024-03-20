@@ -1,8 +1,9 @@
 import numpy as np
 
-from src.continuous.sample_size_estimation import calculate_sample_size_by_mde
 from src.continuous.simulation import StatTestsSimulation
-from src.continuous.utils import generate_data_for_regression_test
+from src.continuous.utils import estimate_sample_size_by_mde
+from src.continuous.utils import generate_data
+
 
 if __name__ == '__main__':
     # Fix global params
@@ -13,17 +14,17 @@ if __name__ == '__main__':
     experiments_num = 200  # Number of experiments to run for each stattest
 
     # Generate test variable
-    test_sr = generate_data_for_regression_test(examples_num)
+    test_sr = generate_data(examples_num)
     # Generate previous value of test variable (will be used to reduce variance) and speedup tests
-    test_previous_value = generate_data_for_regression_test(examples_num, index=test_sr.index).rename("prev")
+    test_previous_value = generate_data(examples_num, index=test_sr.index).rename("prev")
 
     # Generate control variable
-    control_sr = generate_data_for_regression_test(examples_num)
+    control_sr = generate_data(examples_num)
     # Generate previous value of control variable (will be used to reduce variance) and speedup tests
-    control_previous_value = generate_data_for_regression_test(examples_num, index=control_sr.index).rename("prev")
+    control_previous_value = generate_data(examples_num, index=control_sr.index).rename("prev")
 
     # Estimate sample_size need for test
-    sample_size = calculate_sample_size_by_mde(
+    sample_size = estimate_sample_size_by_mde(
         std=np.concatenate([control_sr, test_sr], axis=0).std(),
         alpha=alpha_level, power=power, mde=mde)
     print(f"Minimum sample size for each group is {sample_size}")
