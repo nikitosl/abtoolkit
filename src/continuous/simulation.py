@@ -21,7 +21,7 @@ class StatTestsSimulation:
             stattests_list: List[str],
             sample_size: int,
             experiments_num: int,
-            mde: int,
+            mde: float,
             alpha_level: float = 0.05,
             power: float = 0.8,
             control_previous_values: pd.Series = None,
@@ -98,6 +98,8 @@ class StatTestsSimulation:
             Y = [np.mean(ab_pvalues < x) for x in X]
             plt.plot(X, Y, label=test)
 
+        plt.plot([self.alpha_level, self.alpha_level], [0, 1], '--k', alpha=0.8)
+        plt.plot([0, 1], [self.power, self.power], '--k', alpha=0.8)
         plt.title('P-Value Distribution for AB Simulation', size=12)
         plt.xlabel('p-value', size=10)
         plt.legend(fontsize=10)
