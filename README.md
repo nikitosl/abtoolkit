@@ -42,8 +42,9 @@ simulation.print_results()  # Print results of simulation
 simulation.plot_p_values()  # Plot p-values distribution
 ```
 Output:
-![Screenshot 2024-03-20 at 14.55.06.png](..%2F..%2F..%2F..%2F..%2Fvar%2Ffolders%2Ftd%2F4g0swlbs5yg351q8l_8q7zt59mjw37%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_mLjrT8%2FScreenshot%202024-03-20%20at%2014.55.06.png)
-![Screenshot 2024-03-20 at 14.41.25.png](..%2F..%2F..%2F..%2F..%2Fvar%2Ffolders%2Ftd%2F4g0swlbs5yg351q8l_8q7zt59mjw37%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_uC7yg9%2FScreenshot%202024-03-20%20at%2014.41.25.png)
+![output-plot.png](static%2Foutput-plot.png)
+![p-value-plot.png](static%2Fp-value-plot.png)
+
 Full example of usage you can find in ```examples/continuous_var_analysis.py``` script.
 
 #### Next stat tests implemented for treatment effect estimation:

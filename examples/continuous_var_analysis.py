@@ -10,7 +10,7 @@ if __name__ == '__main__':
     alpha_level = 0.05
     power = 0.8
     examples_num = 1000  # Number of examples in test and control group
-    experiments_num = 500  # Number of experiments to run for each stattest
+    experiments_num = 200  # Number of experiments to run for each stattest
 
     # Generate test variable
     test_sr = generate_data_for_regression_test(examples_num)
@@ -34,7 +34,7 @@ if __name__ == '__main__':
         stattests_list=["ttest", "regression_test", "cuped_ttest", "did_regression_test", "additional_vars_regression_test"],
         experiments_num=experiments_num,  # Run each stattest 10 times
         sample_size=sample_size,  # Take 50 samples from variables
-        mde=mde,  # Trying to detect this effect (very big for our simulated data)
+        mde=mde + 0.05,  # Trying to detect this effect (very big for our simulated data)
         alpha_level=alpha_level,  # Fix alpha level on 5%
 
         control_previous_values=control_previous_value,
