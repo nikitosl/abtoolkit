@@ -49,6 +49,8 @@ Full example of usage you can find in ```examples/continuous_var_analysis.py``` 
 
 #### Next stat tests implemented for treatment effect estimation:
 - ***T-Test*** - estimates treatment effect by comparing variables between test and control groups.
+- ***Difference T-Test*** - estimates treatment effect by comparing difference between actual and previous values 
+of variables in test and control groups.
 - ***Regression Test*** - estimates treatment effect using linear regression by tested predicting variable. 
 Fact of treatment represented in model as binary flag (treated or not). Weight for this flag show significant 
 of treatment impact.

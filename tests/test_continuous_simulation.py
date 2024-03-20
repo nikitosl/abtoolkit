@@ -4,6 +4,8 @@ from src.continuous.utils import generate_data_for_regression_test
 
 
 class TestStatTestsSimulation(unittest.TestCase):
+    tests = ["ttest", "diff_ttest", "regression_test", "cuped_ttest",
+             "did_regression_test", "additional_vars_regression_test"]
     def test_with_2index_success(self):
         test_sr = generate_data_for_regression_test(100)
         test_previous_value = generate_data_for_regression_test(100, index=test_sr.index).rename("prev")
@@ -11,13 +13,12 @@ class TestStatTestsSimulation(unittest.TestCase):
         control_sr = generate_data_for_regression_test(100)
         control_previous_value = generate_data_for_regression_test(100, index=control_sr.index).rename("prev")
 
-        tests = ["ttest", "regression_test", "cuped_ttest", "did_regression_test", "additional_vars_regression_test"]
         experiments_num = 10
 
         sim = StatTestsSimulation(
             control_sr,
             test_sr,
-            stattests_list=tests,
+            stattests_list=self.tests,
             experiments_num=experiments_num,
             sample_size=50,
             mde=10,
@@ -33,9 +34,9 @@ class TestStatTestsSimulation(unittest.TestCase):
         )
         info = sim.run()
 
-        self.assertTrue(len(tests) == len(info.keys()),
+        self.assertTrue(len(self.tests) == len(info.keys()),
                         "Number of tests doesn't match with number of result dicts")
-        for test in tests:
+        for test in self.tests:
             self.assertTrue(test in info.keys(), f"Test '{test}' is not in result dict")
             test_info = info[test]
             self.assertTrue("alpha" in test_info, f"Alpha value not in result dict")
@@ -67,13 +68,12 @@ class TestStatTestsSimulation(unittest.TestCase):
         control_sr = generate_data_for_regression_test(100, add_index=False)
         control_previous_value = generate_data_for_regression_test(100, index=control_sr.index).rename("prev")
 
-        tests = ["ttest", "regression_test", "cuped_ttest", "did_regression_test", "additional_vars_regression_test"]
         experiments_num = 10
 
         sim = StatTestsSimulation(
             control_sr,
             test_sr,
-            stattests_list=tests,
+            stattests_list=self.tests,
             experiments_num=experiments_num,
             sample_size=50,
             mde=10,
@@ -89,9 +89,9 @@ class TestStatTestsSimulation(unittest.TestCase):
         )
         info = sim.run()
 
-        self.assertTrue(len(tests) == len(info.keys()),
+        self.assertTrue(len(self.tests) == len(info.keys()),
                         "Number of tests doesn't match with number of result dicts")
-        for test in tests:
+        for test in self.tests:
             self.assertTrue(test in info.keys(), f"Test '{test}' is not in result dict")
             test_info = info[test]
             self.assertTrue("alpha" in test_info, f"Alpha value not in result dict")

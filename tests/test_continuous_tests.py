@@ -4,6 +4,7 @@ from src.continuous.stattests import regression_test
 from src.continuous.stattests import did_regression_test
 from src.continuous.stattests import additional_vars_regression_test
 from src.continuous.stattests import cuped_ttest
+from src.continuous.stattests import difference_ttest
 from src.continuous.utils import generate_data_for_regression_test
 
 
@@ -12,6 +13,14 @@ class TestStatTests(unittest.TestCase):
         test_sr = generate_data_for_regression_test(100)
         control_sr = generate_data_for_regression_test(100)
         p_value = regression_test(control_sr, test_sr)
+        self.assertTrue(0 <= p_value <= 1, f"Wrong value for p-value: {p_value}")
+
+    def test_diff_ttest(self):
+        test_sr = generate_data_for_regression_test(100)
+        test_pre_sr = generate_data_for_regression_test(100, index=test_sr.index).rename("var_1")
+        control_sr = generate_data_for_regression_test(100)
+        control_pre_sr = generate_data_for_regression_test(100, index=control_sr.index).rename("var_1")
+        p_value = difference_ttest(control_pre_sr, control_sr, test_pre_sr, test_sr)
         self.assertTrue(0 <= p_value <= 1, f"Wrong value for p-value: {p_value}")
 
     def test_did_regression_test(self):

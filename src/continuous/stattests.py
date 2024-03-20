@@ -20,6 +20,26 @@ def ttest(
     return ttest_ind(control, test, alternative="less").pvalue
 
 
+def difference_ttest(
+        control: pd.Series,
+        control_pre: pd.Series,
+        test: pd.Series,
+        test_pre: pd.Series,
+) -> float:
+    """
+    Estimation treatment effect using ttest and CUPED to increase test's power
+    :param control: pd.Series, control sample
+    :param control_pre: pd.Series, control previous period value
+    :param test: pd.Series, test sample
+    :param test_pre: pd.Series, test previous period value
+    :return: p-value
+    """
+    control = control - control_pre
+    test = test - test_pre
+
+    return ttest(control, test)
+
+
 def cuped_ttest(
         control: pd.Series,
         control_covariant: pd.Series,
@@ -28,10 +48,10 @@ def cuped_ttest(
 ) -> float:
     """
     Estimation treatment effect using ttest and CUPED to increase test's power
-    :param control: pd.Series, control sample,
-    :param control_covariant: pd.Series, control sample covariant,
-    :param test: pd.Series, test sample,
-    :param test_covariant: pd.Series, test sample covariant,
+    :param control: pd.Series, control sample
+    :param control_covariant: pd.Series, control sample covariant
+    :param test: pd.Series, test sample
+    :param test_covariant: pd.Series, test sample covariant
     :return: p-value
     """
 
@@ -53,6 +73,7 @@ def cuped_ttest(
     cuped_control = control - theta * control_covariant
 
     return ttest(cuped_control, cuped_test)
+
 
 
 def regression_test(

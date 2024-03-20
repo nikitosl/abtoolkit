@@ -68,8 +68,9 @@ class StatTestsSimulation:
         self.power = power
 
         self.stattests_func_map = {
-            "ttest": self.simulate_ttest_stattest,
-            "cuped_ttest": self.simulate_cuped_stattest,
+            "ttest": self.simulate_ttest,
+            "diff_ttest": self.simulate_difference_ttest,
+            "cuped_ttest": self.simulate_cuped,
             "regression_test": self.simulate_reg,
             "did_regression_test": self.simulate_reg_did,
             "additional_vars_regression_test": self.simulate_reg_add,
@@ -175,7 +176,7 @@ class StatTestsSimulation:
             "ab_pvalues": test_pvalues_effect,
         }
 
-    def simulate_ttest_stattest(self, mde: float) -> float:
+    def simulate_ttest(self, mde: float) -> float:
         """
         Simulate ttest
         :param mde: minimal detectable effect, to sum with test variable
@@ -187,7 +188,24 @@ class StatTestsSimulation:
     
         return ttest(control_sample, test_sample)
 
-    def simulate_cuped_stattest(self, mde: float) -> float:
+    def simulate_difference_ttest(self, mde: float) -> float:
+        """
+        Simulate ttest for difference between actual variable value and previous period variable value
+        :param mde: minimal detectable effect, to sum with test variable
+        :return: p_value
+        """
+        control_index_sample = self.control.index[np.random.randint(0, len(self.control), size=self.sample_size)]
+        test_index_sample = self.test.index[np.random.randint(0, len(self.test), size=self.sample_size)]
+
+        control_sample = self.control.loc[control_index_sample]
+        control_pre_sample = self.control_previous_values.loc[control_index_sample]
+        test_sample = self.test.loc[test_index_sample]
+        test_pre_sample = self.test_previous_values.loc[test_index_sample]
+        test_sample += mde
+
+        return cuped_ttest(control_sample, control_pre_sample, test_sample, test_pre_sample)
+
+    def simulate_cuped(self, mde: float) -> float:
         """
         Simulate CUPED ttest
         :param mde: minimal detectable effect, to sum with test variable
