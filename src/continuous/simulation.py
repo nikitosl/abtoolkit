@@ -1,16 +1,16 @@
 from typing import List
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-import matplotlib.pyplot as plt
 
 from src.continuous.stattests import additional_vars_regression_test
 from src.continuous.stattests import cuped_ttest
 from src.continuous.stattests import did_regression_test
 from src.continuous.stattests import regression_test
 from src.continuous.stattests import ttest
-from src.discrete.sample_size_estimation import estimate_ci_binomial
+from src.discrete.utils import estimate_ci_binomial
 
 
 class StatTestsSimulation:

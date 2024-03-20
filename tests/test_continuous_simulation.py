@@ -1,6 +1,6 @@
 import unittest
 from src.continuous.simulation import StatTestsSimulation
-from src.continuous.utils import generate_data_for_regression_test
+from src.continuous.utils import generate_data
 
 
 class TestStatTestsSimulation(unittest.TestCase):
@@ -8,11 +8,11 @@ class TestStatTestsSimulation(unittest.TestCase):
              "did_regression_test", "additional_vars_regression_test"]
 
     def test_success(self):
-        test_sr = generate_data_for_regression_test(100)
-        test_previous_value = generate_data_for_regression_test(100, index=test_sr.index).rename("prev")
+        test_sr = generate_data(100)
+        test_previous_value = generate_data(100, index=test_sr.index).rename("prev")
 
-        control_sr = generate_data_for_regression_test(100)
-        control_previous_value = generate_data_for_regression_test(100, index=control_sr.index).rename("prev")
+        control_sr = generate_data(100)
+        control_previous_value = generate_data(100, index=control_sr.index).rename("prev")
 
         experiments_num = 10
 
