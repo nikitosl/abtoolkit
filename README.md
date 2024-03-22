@@ -84,4 +84,4 @@ ToBeDone
 #### Next stat tests implemented for treatment effect estimation:
 ToBeDone
 
-You can find examples of toolkit usage in ```examples/``` directory.
+You can find examples of toolkit usage in [examples/](https://github.com/nikitosl/abtoolkit/tree/master/examples) directory.

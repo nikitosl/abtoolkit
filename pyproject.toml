@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "abtoolkit"
+version = "0.0.1"
+authors = [
+  { name="Nikita Altukhov", email="altuxov.nikita@gmail.com" },
+]
+description = "Package with tools for AB testing"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+keywords = ["ab_test", "cuped", "did", "ttest"]
+dependencies = [
+    "pandas",
+    "statsmodels",
+    "scipy",
+    "linearmodels",
+    "tqdm",
+    "matplotlib",
+]
+
+[project.urls]
+Homepage = "https://github.com/nikitosl/abtoolkit"
+Issues = "https://github.com/nikitosl/abtoolkit/issues"
+
+[tool.setuptools.packages]
+find = {}
