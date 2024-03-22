@@ -3,3 +3,4 @@ statsmodels
 scipy
 linearmodels
 tqdm
+matplotlib
