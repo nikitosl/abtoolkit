@@ -4,7 +4,7 @@ Set of tools for AA and AB tests.
 ## Continuous variables analysis
 #### Sample size estimation:
 ```
-from src.continuous.sample_size_estimation import calculate_sample_size_by_mde
+from abtoolkit.continuous.sample_size_estimation import calculate_sample_size_by_mde
 calculate_sample_size_by_mde(
     std=variable.std(),
     alpha=alpha_level, 
@@ -14,13 +14,13 @@ calculate_sample_size_by_mde(
 ```
 
 #### AA and AB tests simulation:
-Using ```src.continuous.simulation.StatTestsSimulation``` class you can simulate and check different stat-test, 
+Using ```abtoolkit.continuous.simulation.StatTestsSimulation``` class you can simulate and check different stat-test, 
 compare them in terms of stat test power to choose the best test for your data. As result of simulation for each 
 stat test you will get the 1-st Type error estimation with confidence interval, 2-nd Type error estimation with 
 confidence interval and plot of p-value distribution for different tests.
 
 ```
-from src.continuous.simulation import StatTestsSimulation
+from abtoolkit.continuous.simulation import StatTestsSimulation
 simulation = StatTestsSimulation(
     control,
     test,
@@ -72,7 +72,7 @@ of treatment impact.
 ## Discrete variables analysis
 #### Sample size estimation:
 ```
-from src.discrete.sample_size_estimation import estimate_ci_binomial
+from abtoolkit.discrete.sample_size_estimation import estimate_ci_binomial
 estimate_ci_binomial(
     p, 
     sample_size, 

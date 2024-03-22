@@ -1,11 +1,11 @@
 import unittest
 
-from src.continuous.stattests import regression_test
-from src.continuous.stattests import did_regression_test
-from src.continuous.stattests import additional_vars_regression_test
-from src.continuous.stattests import cuped_ttest
-from src.continuous.stattests import difference_ttest
-from src.continuous.utils import generate_data
+from abtoolkit.continuous.stattests import regression_test
+from abtoolkit.continuous.stattests import did_regression_test
+from abtoolkit.continuous.stattests import additional_vars_regression_test
+from abtoolkit.continuous.stattests import cuped_ttest
+from abtoolkit.continuous.stattests import difference_ttest
+from abtoolkit.continuous.utils import generate_data
 
 
 class TestStatTests(unittest.TestCase):

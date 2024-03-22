@@ -1,8 +1,8 @@
 import numpy as np
 
-from src.continuous.simulation import StatTestsSimulation
-from src.continuous.utils import estimate_sample_size_by_mde
-from src.continuous.utils import generate_data
+from abtoolkit.continuous.simulation import StatTestsSimulation
+from abtoolkit.continuous.utils import estimate_sample_size_by_mde
+from abtoolkit.continuous.utils import generate_data
 
 
 if __name__ == '__main__':

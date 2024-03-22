@@ -5,12 +5,12 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-from src.continuous.stattests import additional_vars_regression_test
-from src.continuous.stattests import cuped_ttest
-from src.continuous.stattests import did_regression_test
-from src.continuous.stattests import regression_test
-from src.continuous.stattests import ttest
-from src.discrete.utils import estimate_ci_binomial
+from abtoolkit.continuous.stattests import additional_vars_regression_test
+from abtoolkit.continuous.stattests import cuped_ttest
+from abtoolkit.continuous.stattests import did_regression_test
+from abtoolkit.continuous.stattests import regression_test
+from abtoolkit.continuous.stattests import ttest
+from abtoolkit.discrete.utils import estimate_ci_binomial
 
 
 class StatTestsSimulation:

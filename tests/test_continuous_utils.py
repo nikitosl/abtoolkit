@@ -3,8 +3,8 @@ import unittest
 import numpy as np
 import pandas as pd
 
-from src.continuous.utils import estimate_mde_by_sample_size
-from src.continuous.utils import estimate_sample_size_by_mde
+from abtoolkit.continuous.utils import estimate_mde_by_sample_size
+from abtoolkit.continuous.utils import estimate_sample_size_by_mde
 
 
 class TestSampleSizeEstimation(unittest.TestCase):

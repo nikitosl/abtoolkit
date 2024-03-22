@@ -1,6 +1,6 @@
 import unittest
-from src.discrete.utils import calculate_sample_size
-from src.discrete.utils import estimate_ci_binomial
+from abtoolkit.discrete.utils import calculate_sample_size
+from abtoolkit.discrete.utils import estimate_ci_binomial
 
 
 class TestSampleSizeEstimation(unittest.TestCase):

@@ -1,6 +1,6 @@
 import unittest
-from src.continuous.simulation import StatTestsSimulation
-from src.continuous.utils import generate_data
+from abtoolkit.continuous.simulation import StatTestsSimulation
+from abtoolkit.continuous.utils import generate_data
 
 
 class TestStatTestsSimulation(unittest.TestCase):
