@@ -18,12 +18,12 @@ classifiers = [
 ]
 keywords = ["ab_test", "cuped", "did", "ttest"]
 dependencies = [
-    "pandas",
-    "statsmodels",
-    "scipy",
-    "linearmodels",
-    "tqdm",
-    "matplotlib",
+    "pandas>=2.2.1",
+    "numpy>=1.26.4",
+    "statsmodels>=0.14.1",
+    "scipy>=1.12.0",
+    "linearmodels>=5.4",
+    "tqdm>=4.66.2",
 ]
 
 [project.urls]
