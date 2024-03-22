@@ -1,4 +1,4 @@
-# ab-toolkit
+# AB-Toolkit
 Set of tools for AA and AB tests.
 
 ## Continuous variables analysis
