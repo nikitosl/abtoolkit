@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "abtoolkit"
-version = "0.0.1"
+version = "1.0.0"
 authors = [
   { name="Nikita Altukhov", email="altuxov.nikita@gmail.com" },
 ]

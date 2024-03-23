@@ -1,10 +1,14 @@
-# AB-Toolkit
-Set of tools for AA and AB tests.
+# ABToolkit
+Set of tools for AA and AB tests, sample size estimation, confidence intervals estimation. 
+For continuous and discrete variables.
+
+## Install using pip:
+```pip install abtoolkit```
 
 ## Continuous variables analysis
 #### Sample size estimation:
 ```
-from abtoolkit.continuous.sample_size_estimation import calculate_sample_size_by_mde
+from abtoolkit.continuous.utils import calculate_sample_size_by_mde
 calculate_sample_size_by_mde(
     std=variable.std(),
     alpha=alpha_level, 
@@ -72,7 +76,7 @@ of treatment impact.
 ## Discrete variables analysis
 #### Sample size estimation:
 ```
-from abtoolkit.discrete.sample_size_estimation import estimate_ci_binomial
+from abtoolkit.discrete.utils import estimate_ci_binomial
 estimate_ci_binomial(
     p, 
     sample_size, 
@@ -80,8 +84,9 @@ estimate_ci_binomial(
 )
 ```
 #### AA and AB tests simulation:
-ToBeDone
+To Be Done
 #### Next stat tests implemented for treatment effect estimation:
-ToBeDone
+To Be Done
 
+---
 You can find examples of toolkit usage in [examples/](https://github.com/nikitosl/abtoolkit/tree/master/examples) directory.
