@@ -1,3 +1,7 @@
+"""
+Utils functions for continuous variables
+"""
+
 from typing import Tuple
 
 import numpy as np
@@ -32,11 +36,7 @@ def generate_data(size, add_index=True, index=None) -> pd.Series:
 
 
 def estimate_confidence_interval(
-        mean: float,
-        std: float,
-        sample_size: int,
-        alpha: float,
-        power: float
+    mean: float, std: float, sample_size: int, alpha: float, power: float
 ) -> Tuple[float, float]:
     """
     Confidence interval estimation

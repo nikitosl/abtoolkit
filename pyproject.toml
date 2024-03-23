@@ -32,3 +32,10 @@ Issues = "https://github.com/nikitosl/abtoolkit/issues"
 
 [tool.setuptools.packages]
 find = {}
+
+[tool.pylint.'MESSAGES CONTROL']
+max-line-length = 120
+disable = "too-many-instance-attributes, too-many-arguments"
+
+[tool.black]
+line-length = 120

@@ -1,3 +1,7 @@
+"""
+Stat tests for continuous variables
+"""
+
 from typing import List
 
 import linearmodels as lm
@@ -7,8 +11,8 @@ from scipy.stats import ttest_ind
 
 
 def ttest(
-        control: pd.Series,
-        test: pd.Series,
+    control: pd.Series,
+    test: pd.Series,
 ) -> float:
     """
     Simple two-side t-test
@@ -21,10 +25,10 @@ def ttest(
 
 
 def difference_ttest(
-        control: pd.Series,
-        control_pre: pd.Series,
-        test: pd.Series,
-        test_pre: pd.Series,
+    control: pd.Series,
+    control_pre: pd.Series,
+    test: pd.Series,
+    test_pre: pd.Series,
 ) -> float:
     """
     Estimation treatment effect using ttest and CUPED to increase test's power
@@ -41,10 +45,10 @@ def difference_ttest(
 
 
 def cuped_ttest(
-        control: pd.Series,
-        control_covariant: pd.Series,
-        test: pd.Series,
-        test_covariant: pd.Series,
+    control: pd.Series,
+    control_covariant: pd.Series,
+    test: pd.Series,
+    test_covariant: pd.Series,
 ) -> float:
     """
     Estimation treatment effect using ttest and CUPED to increase test's power
@@ -55,15 +59,21 @@ def cuped_ttest(
     :return: p-value
     """
 
-    full_value = pd.concat([
-        control.rename("value"),
-        test.rename("value"),
-    ], axis=0)
+    full_value = pd.concat(
+        [
+            control.rename("value"),
+            test.rename("value"),
+        ],
+        axis=0,
+    )
 
-    full_covariant = pd.concat([
-        control_covariant.rename("covariant"),
-        test_covariant.rename("covariant"),
-    ], axis=0)
+    full_covariant = pd.concat(
+        [
+            control_covariant.rename("covariant"),
+            test_covariant.rename("covariant"),
+        ],
+        axis=0,
+    )
 
     cov = np.cov(full_covariant, full_value)[0, 1]
     var = full_covariant.var()
@@ -75,10 +85,9 @@ def cuped_ttest(
     return ttest(cuped_control, cuped_test)
 
 
-
 def regression_test(
-        control: pd.Series,
-        test: pd.Series,
+    control: pd.Series,
+    test: pd.Series,
 ) -> float:
     """
     Treatment effect estimation using linear regression
@@ -86,10 +95,13 @@ def regression_test(
     :param test: pd.Series with index [entity, dt], where dt could be int of datetime. Test sample
     :return: p-value
     """
-    df = pd.concat([
-        control.rename("value").to_frame().assign(treated=0),
-        test.rename("value").to_frame().assign(treated=1),
-    ], axis=0)
+    df = pd.concat(
+        [
+            control.rename("value").to_frame().assign(treated=0),
+            test.rename("value").to_frame().assign(treated=1),
+        ],
+        axis=0,
+    )
     df["bias"] = 1
 
     if not isinstance(df.index, pd.MultiIndex):
@@ -103,10 +115,10 @@ def regression_test(
 
 
 def did_regression_test(
-        control: pd.Series,
-        control_pre: pd.Series,
-        test: pd.Series,
-        test_pre: pd.Series,
+    control: pd.Series,
+    control_pre: pd.Series,
+    test: pd.Series,
+    test_pre: pd.Series,
 ) -> float:
     """
     Difference-in-Difference treatment effect estimation using linear regression.
@@ -120,12 +132,15 @@ def did_regression_test(
     :param test: pd.Series with index [entity, dt], where dt could be int of datetime. Test sample after treatment
     :return: p-value
     """
-    df = pd.concat([
-        control_pre.rename("value").to_frame().assign(treated=0).assign(after=0),
-        control.rename("value").to_frame().assign(treated=0).assign(after=1),
-        test_pre.rename("value").to_frame().assign(treated=1).assign(after=0),
-        test.rename("value").to_frame().assign(treated=1).assign(after=1),
-    ], axis=0)
+    df = pd.concat(
+        [
+            control_pre.rename("value").to_frame().assign(treated=0).assign(after=0),
+            control.rename("value").to_frame().assign(treated=0).assign(after=1),
+            test_pre.rename("value").to_frame().assign(treated=1).assign(after=0),
+            test.rename("value").to_frame().assign(treated=1).assign(after=1),
+        ],
+        axis=0,
+    )
 
     df["bias"] = 1
 
@@ -140,10 +155,10 @@ def did_regression_test(
 
 
 def additional_vars_regression_test(
-        control: pd.Series,
-        control_additional_vars: List[pd.Series],
-        test: pd.Series,
-        test_additional_vars: List[pd.Series],
+    control: pd.Series,
+    control_additional_vars: List[pd.Series],
+    test: pd.Series,
+    test_additional_vars: List[pd.Series],
 ) -> float:
     """
     Treatment effect estimation using additional variables in linear regression. Additional
@@ -163,19 +178,23 @@ def additional_vars_regression_test(
 
     additional_vars_names_test = [v.name for v in test_additional_vars]
     additional_vars_names_control = [v.name for v in control_additional_vars]
-    assert set(additional_vars_names_test) == set(additional_vars_names_control), \
-        (f"Lists of control and test additional vars should the same. "
-         f"Got {set(additional_vars_names_test)} vars for test "
-         f"and {set(additional_vars_names_control)} vars for control")
+    assert set(additional_vars_names_test) == set(additional_vars_names_control), (
+        f"Lists of control and test additional vars should the same. "
+        f"Got {set(additional_vars_names_test)} vars for test "
+        f"and {set(additional_vars_names_control)} vars for control"
+    )
 
     control_df = pd.concat([control.rename("value").to_frame()] + control_additional_vars, axis=1)
     test_df = pd.concat([test.rename("value").to_frame()] + test_additional_vars, axis=1)
 
     control_df.index = test_df.index
-    df = pd.concat([
-        control_df.assign(treated=0),
-        test_df.assign(treated=1),
-    ], axis=0)
+    df = pd.concat(
+        [
+            control_df.assign(treated=0),
+            test_df.assign(treated=1),
+        ],
+        axis=0,
+    )
 
     df["bias"] = 1
 

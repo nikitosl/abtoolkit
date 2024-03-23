@@ -1,3 +1,7 @@
+"""
+Simulates AA and AB tests to estimate test power and alpha
+"""
+
 from typing import List
 
 import matplotlib.pyplot as plt
@@ -14,22 +18,26 @@ from abtoolkit.discrete.utils import estimate_ci_binomial
 
 
 class StatTestsSimulation:
+    """
+    Class simulates AA and AB tests to estimate test power, builds p-value distribution plot
+    """
+
     def __init__(
-            self,
-            control: pd.Series,
-            test: pd.Series,
-            stattests_list: List[str],
-            sample_size: int,
-            experiments_num: int,
-            mde: float,
-            alpha_level: float = 0.05,
-            power: float = 0.8,
-            control_previous_values: pd.Series = None,
-            test_previous_values: pd.Series = None,
-            control_cuped_covariant: pd.Series = None,
-            test_cuped_covariant: pd.Series = None,
-            control_additional_vars: List[pd.Series] = None,
-            test_additional_vars: List[pd.Series] = None,
+        self,
+        control: pd.Series,
+        test: pd.Series,
+        stattests_list: List[str],
+        sample_size: int,
+        experiments_num: int,
+        mde: float,
+        alpha_level: float = 0.05,
+        power: float = 0.8,
+        control_previous_values: pd.Series = None,
+        test_previous_values: pd.Series = None,
+        control_cuped_covariant: pd.Series = None,
+        test_cuped_covariant: pd.Series = None,
+        control_additional_vars: List[pd.Series] = None,
+        test_additional_vars: List[pd.Series] = None,
     ):
         """
         Simulates AA and AB tests for given stat-tests. Prints result (alpha and power) for each test
@@ -93,16 +101,16 @@ class StatTestsSimulation:
         if len(self.info) == 0:
             return
 
-        X = np.linspace(0, 1, 1000)
+        x_axis = np.linspace(0, 1, 1000)
         for test, test_info in self.info.items():
             ab_pvalues = np.array(test_info["ab_pvalues"])
-            Y = [np.mean(ab_pvalues < x) for x in X]
-            plt.plot(X, Y, label=test)
+            y_axis = [np.mean(ab_pvalues < x) for x in x_axis]
+            plt.plot(x_axis, y_axis, label=test)
 
-        plt.plot([self.alpha_level, self.alpha_level], [0, 1], '--k', alpha=0.8)
-        plt.plot([0, 1], [self.power, self.power], '--k', alpha=0.8)
-        plt.title('P-Value Distribution for AB Simulation', size=12)
-        plt.xlabel('p-value', size=10)
+        plt.plot([self.alpha_level, self.alpha_level], [0, 1], "--k", alpha=0.8)
+        plt.plot([0, 1], [self.power, self.power], "--k", alpha=0.8)
+        plt.title("P-Value Distribution for AB Simulation", size=12)
+        plt.xlabel("p-value", size=10)
         plt.legend(fontsize=10)
         plt.grid()
         plt.show()
@@ -112,15 +120,21 @@ class StatTestsSimulation:
         Print simulation results for each test (alpha and power + confidence intervals)
         :return: None
         """
-        for test in self.info:
-            a, p = self.info[test]['alpha'], self.info[test]['power']
-            aci1, aci2 = round(self.info[test]['alpha_ci'][0], 4), round(self.info[test]['alpha_ci'][1], 4)
-            pci1, pci2 = round(self.info[test]['power_ci'][0], 4), round(self.info[test]['power_ci'][1], 4)
+        for test_name, test_info in self.info.items():
+            a, p = test_info["alpha"], test_info["power"]
+            aci1 = round(test_info["alpha_ci"][0], 4)
+            aci2 = round(test_info["alpha_ci"][1], 4)
+            pci1 = round(test_info["power_ci"][0], 4)
+            pci2 = round(test_info["power_ci"][1], 4)
 
             if (aci1 > self.alpha_level) or (self.power > pci2):
-                print('\033[91m' + f"'{test}'; alpha={a} ci[{aci1}; {aci2}], power={p} [{pci1}; {pci2}]" + '\033[0m')
+                print(
+                    "\033[91m" + f"'{test_name}'; alpha={a} ci[{aci1}; {aci2}], power={p} [{pci1}; {pci2}]" + "\033[0m"
+                )
             else:
-                print('\033[92m' + f"'{test}'; alpha={a} ci[{aci1}; {aci2}], power={p} [{pci1}; {pci2}]" + '\033[0m')
+                print(
+                    "\033[92m" + f"'{test_name}'; alpha={a} ci[{aci1}; {aci2}], power={p} [{pci1}; {pci2}]" + "\033[0m"
+                )
 
     def run(self):
         """
@@ -158,7 +172,7 @@ class StatTestsSimulation:
             test_pvalues_effect.append(p_value)
             if p_value < self.alpha_level:
                 test_success_effect_cnt += 1
-    
+
         alpha = test_success_no_effect_cnt / self.experiments_num
         power = test_success_effect_cnt / self.experiments_num
 
@@ -185,7 +199,7 @@ class StatTestsSimulation:
         control_sample = self.control.sample(self.sample_size, replace=True)
         test_sample = self.test.sample(self.sample_size, replace=True)
         test_sample += mde
-    
+
         return ttest(control_sample, test_sample)
 
     def simulate_difference_ttest(self, mde: float) -> float:
@@ -213,13 +227,13 @@ class StatTestsSimulation:
         """
         control_index_sample = self.control.index[np.random.randint(0, len(self.control), size=self.sample_size)]
         test_index_sample = self.test.index[np.random.randint(0, len(self.test), size=self.sample_size)]
-    
+
         control_sample = self.control.loc[control_index_sample]
         control_covariant_sample = self.control_cuped_covariant.loc[control_index_sample]
         test_sample = self.test.loc[test_index_sample]
         test_covariant_sample = self.test_cuped_covariant.loc[test_index_sample]
         test_sample += mde
-    
+
         return cuped_ttest(control_sample, control_covariant_sample, test_sample, test_covariant_sample)
 
     def simulate_reg(self, mde: float) -> float:

@@ -1,3 +1,7 @@
+"""
+Utils functions for discrete variable analysis
+"""
+
 import numpy as np
 from scipy import stats
 
