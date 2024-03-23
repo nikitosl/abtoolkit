@@ -122,10 +122,8 @@ class StatTestsSimulation:
         """
         for test_name, test_info in self.info.items():
             a, p = test_info["alpha"], test_info["power"]
-            aci1 = round(test_info["alpha_ci"][0], 4)
-            aci2 = round(test_info["alpha_ci"][1], 4)
-            pci1 = round(test_info["power_ci"][0], 4)
-            pci2 = round(test_info["power_ci"][1], 4)
+            aci1, aci2 = round(test_info["alpha_ci"][0], 4), round(test_info["alpha_ci"][1], 4)
+            pci1, pci2 = round(test_info["power_ci"][0], 4), round(test_info["power_ci"][1], 4)
 
             if (aci1 > self.alpha_level) or (self.power > pci2):
                 print(
