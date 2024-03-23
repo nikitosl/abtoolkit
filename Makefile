@@ -2,7 +2,7 @@
 
 # Run it once to link pre-commit hooks
 link_git_hooks:
-	ln -s pre-commit.bash .git/hooks/pre-commit
+	ln -s ../../pre-commit.bash .git/hooks/pre-commit
 
 # Git uses hooks to run check_code before each commit
 check_code:
