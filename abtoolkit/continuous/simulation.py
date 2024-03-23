@@ -1,6 +1,4 @@
-"""
-Simulates AA and AB tests to estimate test power and alpha
-"""
+
 
 from typing import List
 
