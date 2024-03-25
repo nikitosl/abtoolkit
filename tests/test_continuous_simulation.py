@@ -8,17 +8,13 @@ class TestStatTestsSimulation(unittest.TestCase):
              "did_regression_test", "additional_vars_regression_test"]
 
     def test_success(self):
-        test_sr = generate_data(100)
-        test_previous_value = generate_data(100, index=test_sr.index).rename("prev")
-
-        control_sr = generate_data(100)
-        control_previous_value = generate_data(100, index=control_sr.index).rename("prev")
+        variable = generate_data(100)
+        previous_value = generate_data(100, index=variable.index).rename("prev")
 
         experiments_num = 10
 
         sim = StatTestsSimulation(
-            control_sr,
-            test_sr,
+            variable,
             stattests_list=self.tests,
             experiments_num=experiments_num,
             alternative="two-sided",
@@ -27,12 +23,9 @@ class TestStatTestsSimulation(unittest.TestCase):
             alpha_level=0.05,
             power=0.8,
 
-            control_previous_values=control_previous_value,
-            test_previous_values=test_previous_value,
-            control_cuped_covariant=control_previous_value,
-            test_cuped_covariant=test_previous_value,
-            control_additional_vars=[control_previous_value],
-            test_additional_vars=[test_previous_value],
+            previous_values=previous_value,
+            cuped_covariant=previous_value,
+            additional_vars=[previous_value],
         )
         info = sim.run()
 
