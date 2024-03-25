@@ -36,12 +36,12 @@ def generate_data(size, add_index=True, index=None) -> pd.Series:
 
 
 def estimate_confidence_interval(
-        mean: float,
-        std: float,
-        sample_size: int,
-        alpha: float,
-        power: float,
-        alternative: Literal["less", "greater", "two-sided"],
+    mean: float,
+    std: float,
+    sample_size: int,
+    alpha: float,
+    power: float,
+    alternative: Literal["less", "greater", "two-sided"],
 ) -> Tuple[float, float]:
     """
     Confidence interval estimation
@@ -66,11 +66,11 @@ def estimate_confidence_interval(
 
 
 def estimate_sample_size_by_mde(
-        std: float,
-        alpha: float,
-        power: float,
-        mde: float,
-        alternative: Literal["less", "greater", "two-sided"],
+    std: float,
+    alpha: float,
+    power: float,
+    mde: float,
+    alternative: Literal["less", "greater", "two-sided"],
 ) -> int:
     """
     Calculate sample size need for significant ttest using std, alpha, power, mde
@@ -96,11 +96,11 @@ def estimate_sample_size_by_mde(
 
 
 def estimate_mde_by_sample_size(
-        std: float,
-        alpha: float,
-        power: float,
-        sample_size: int,
-        alternative: Literal["less", "greater", "two-sided"],
+    std: float,
+    alpha: float,
+    power: float,
+    sample_size: int,
+    alternative: Literal["less", "greater", "two-sided"],
 ):
     """
     Calculate sample size need for significant ttest using std, alpha, power, mde
