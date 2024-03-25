@@ -21,6 +21,7 @@ class TestStatTestsSimulation(unittest.TestCase):
             test_sr,
             stattests_list=self.tests,
             experiments_num=experiments_num,
+            alternative="two-sided",
             sample_size=50,
             mde=10,
             alpha_level=0.05,

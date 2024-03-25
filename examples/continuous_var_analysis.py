@@ -11,7 +11,8 @@ if __name__ == '__main__':
     alpha_level = 0.05
     power = 0.8
     examples_num = 1000  # Number of examples in test and control group
-    experiments_num = 200  # Number of experiments to run for each stattest
+    experiments_num = 1000  # Number of experiments to run for each stattest
+    alternative = 'two-sided'
 
     # Generate test variable
     test_sr = generate_data(examples_num)
@@ -26,7 +27,7 @@ if __name__ == '__main__':
     # Estimate sample_size need for test
     sample_size = estimate_sample_size_by_mde(
         std=np.concatenate([control_sr, test_sr], axis=0).std(),
-        alpha=alpha_level, power=power, mde=mde)
+        alpha=alpha_level, power=power, mde=mde, alternative=alternative)
     print(f"Minimum sample size for each group is {sample_size}")
 
     sim = StatTestsSimulation(
@@ -34,6 +35,7 @@ if __name__ == '__main__':
         test_sr,
         stattests_list=["ttest", "diff_ttest", "regression_test", "cuped_ttest", "did_regression_test",
                         "additional_vars_regression_test"],
+        alternative=alternative,
         experiments_num=experiments_num,  # Run each stattest 10 times
         sample_size=sample_size,  # Take 50 samples from variables
         mde=mde,  # Trying to detect this effect (very big for our simulated data)

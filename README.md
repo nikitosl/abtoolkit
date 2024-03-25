@@ -29,6 +29,7 @@ simulation = StatTestsSimulation(
     control,
     test,
     stattests_list=["ttest", "regression_test", "cuped_ttest", "did_regression_test", "additional_vars_regression_test"],
+    alternative="two-sided",
     experiments_num=experiments_num,
     sample_size=sample_size,
     mde=mde,

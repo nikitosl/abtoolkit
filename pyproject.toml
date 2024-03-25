@@ -35,7 +35,7 @@ find = {}
 
 [tool.pylint.'MESSAGES CONTROL']
 max-line-length = 120
-disable = "too-many-instance-attributes, too-many-arguments"
+disable = "too-many-instance-attributes, too-many-arguments, too-many-locals, no-member"
 
 [tool.black]
 line-length = 120

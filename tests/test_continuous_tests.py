@@ -5,14 +5,21 @@ from abtoolkit.continuous.stattests import did_regression_test
 from abtoolkit.continuous.stattests import additional_vars_regression_test
 from abtoolkit.continuous.stattests import cuped_ttest
 from abtoolkit.continuous.stattests import difference_ttest
+from abtoolkit.continuous.stattests import ttest
 from abtoolkit.continuous.utils import generate_data
 
 
 class TestStatTests(unittest.TestCase):
+    def test_ttest(self):
+        test_sr = generate_data(100)
+        control_sr = generate_data(100)
+        p_value = ttest(control_sr, test_sr, "two-sided")
+        self.assertTrue(0 <= p_value <= 1, f"Wrong value for p-value: {p_value}")
+
     def test_regression_test(self):
         test_sr = generate_data(100)
         control_sr = generate_data(100)
-        p_value = regression_test(control_sr, test_sr)
+        p_value = regression_test(control_sr, test_sr, "two-sided")
         self.assertTrue(0 <= p_value <= 1, f"Wrong value for p-value: {p_value}")
 
     def test_diff_ttest(self):
@@ -20,7 +27,7 @@ class TestStatTests(unittest.TestCase):
         test_pre_sr = generate_data(100, index=test_sr.index).rename("var_1")
         control_sr = generate_data(100)
         control_pre_sr = generate_data(100, index=control_sr.index).rename("var_1")
-        p_value = difference_ttest(control_pre_sr, control_sr, test_pre_sr, test_sr)
+        p_value = difference_ttest(control_pre_sr, control_sr, test_pre_sr, test_sr, "two-sided")
         self.assertTrue(0 <= p_value <= 1, f"Wrong value for p-value: {p_value}")
 
     def test_did_regression_test(self):
@@ -28,7 +35,8 @@ class TestStatTests(unittest.TestCase):
         test_post_sr = generate_data(100)
         control_pre_sr = generate_data(100)
         control_post_sr = generate_data(100)
-        p_value = did_regression_test(control_pre_sr, control_post_sr, test_pre_sr, test_post_sr)
+        p_value = did_regression_test(control_pre_sr, control_post_sr, test_pre_sr, test_post_sr, 
+                                      "two-sided")
         self.assertTrue(0 <= p_value <= 1, f"Wrong value for p-value: {p_value}")
 
     def test_additional_vars_reg_one_var_test(self):
@@ -40,7 +48,8 @@ class TestStatTests(unittest.TestCase):
             control_sr,
             [control_additional_var],
             test_sr,
-            [test_additional_var]
+            [test_additional_var],
+            "two-sided"
         )
         self.assertTrue(0 <= p_value <= 1, f"Wrong value for p-value: {p_value}")
 
@@ -51,7 +60,7 @@ class TestStatTests(unittest.TestCase):
         control_additional_var = generate_data(100, index=control_sr.index).rename("var_2")
         self.assertRaises(AssertionError, additional_vars_regression_test,
                           control_sr, [control_additional_var],
-                          test_sr, [test_additional_var])
+                          test_sr, [test_additional_var], "two-sided")
 
     def test_additional_vars_reg_multiple_vars_test(self):
         test_sr = generate_data(100)
@@ -64,14 +73,15 @@ class TestStatTests(unittest.TestCase):
             control_sr,
             [control_additional_var1, control_additional_var2],
             test_sr,
-            [test_additional_var1, test_additional_var2]
+            [test_additional_var1, test_additional_var2],
+            "two-sided"
         )
         self.assertTrue(0 <= p_value <= 1, f"Wrong value for p-value: {p_value}")
 
     def test_additional_vars_reg_no_vars_test(self):
         test_sr = generate_data(100)
         control_sr = generate_data(100)
-        self.assertRaises(AssertionError, additional_vars_regression_test, control_sr, [], test_sr, [])
+        self.assertRaises(AssertionError, additional_vars_regression_test, control_sr, [], test_sr, [], "two-sided")
 
     def test_cuped_ttest(self):
         test_sr = generate_data(100)
@@ -83,5 +93,6 @@ class TestStatTests(unittest.TestCase):
             control_covariant_sr,
             test_sr,
             test_covariant_sr,
+            "two-sided",
         )
         self.assertTrue(0 <= p_value <= 1, f"Wrong value for p-value: {p_value}")

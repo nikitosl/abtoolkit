@@ -2,7 +2,7 @@
 Simulates AA and AB tests to estimate test power and alpha
 """
 
-from typing import List
+from typing import List, Literal
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -26,6 +26,7 @@ class StatTestsSimulation:
         self,
         control: pd.Series,
         test: pd.Series,
+        alternative: Literal["less", "greater", "two-sided"],
         stattests_list: List[str],
         sample_size: int,
         experiments_num: int,
@@ -68,6 +69,7 @@ class StatTestsSimulation:
         self.control = control
         self.test = test
 
+        self.alternative = alternative
         self.stattests_list = stattests_list
         self.experiments_num = experiments_num
         self.sample_size = sample_size
@@ -198,7 +200,7 @@ class StatTestsSimulation:
         test_sample = self.test.sample(self.sample_size, replace=True)
         test_sample += mde
 
-        return ttest(control_sample, test_sample)
+        return ttest(control_sample, test_sample, self.alternative)
 
     def simulate_difference_ttest(self, mde: float) -> float:
         """
@@ -215,7 +217,7 @@ class StatTestsSimulation:
         test_pre_sample = self.test_previous_values.loc[test_index_sample]
         test_sample += mde
 
-        return cuped_ttest(control_sample, control_pre_sample, test_sample, test_pre_sample)
+        return cuped_ttest(control_sample, control_pre_sample, test_sample, test_pre_sample, self.alternative)
 
     def simulate_cuped(self, mde: float) -> float:
         """
@@ -232,7 +234,9 @@ class StatTestsSimulation:
         test_covariant_sample = self.test_cuped_covariant.loc[test_index_sample]
         test_sample += mde
 
-        return cuped_ttest(control_sample, control_covariant_sample, test_sample, test_covariant_sample)
+        return cuped_ttest(
+            control_sample, control_covariant_sample, test_sample, test_covariant_sample, self.alternative
+        )
 
     def simulate_reg(self, mde: float) -> float:
         """
@@ -244,7 +248,7 @@ class StatTestsSimulation:
         test_sample = self.test.sample(self.sample_size, replace=True)
         test_sample += mde
 
-        return regression_test(control_sample, test_sample)
+        return regression_test(control_sample, test_sample, self.alternative)
 
     def simulate_reg_did(self, mde: float) -> float:
         """
@@ -261,7 +265,9 @@ class StatTestsSimulation:
         test_previous_sample = self.test_previous_values.loc[test_index_sample]
         test_sample += mde
 
-        return did_regression_test(control_sample, control_previous_sample, test_sample, test_previous_sample)
+        return did_regression_test(
+            control_sample, control_previous_sample, test_sample, test_previous_sample, self.alternative
+        )
 
     def simulate_reg_add(self, mde: float) -> float:
         """
@@ -278,4 +284,6 @@ class StatTestsSimulation:
         test_add_samples = [a.loc[test_index_sample] for a in self.test_additional_vars]
         test_sample += mde
 
-        return additional_vars_regression_test(control_sample, control_add_samples, test_sample, test_add_samples)
+        return additional_vars_regression_test(
+            control_sample, control_add_samples, test_sample, test_add_samples, self.alternative
+        )
