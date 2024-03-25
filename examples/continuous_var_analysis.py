@@ -10,8 +10,8 @@ if __name__ == '__main__':
     mde = 2
     alpha_level = 0.05
     power = 0.8
-    examples_num = 1000  # Number of examples in test and control group
-    experiments_num = 1000  # Number of experiments to run for each stattest
+    examples_num = 2000  # Number of examples in test and control group
+    experiments_num = 200  # Number of experiments to run for each stattest
     alternative = 'two-sided'
 
     # Generate test variable

@@ -220,7 +220,7 @@ def did_regression_test(
         df["index2"] = 1
         df = df.set_index(["index1", "index2"])
 
-    mod = lm.PanelOLS.from_formula("value ~ bias + + after + treated + treated*after", data=df)
+    mod = lm.PanelOLS.from_formula("value ~ bias + after + treated + treated*after", data=df)
     result = mod.fit()
     return _corrected_regression_p_value(result.params["treated:after"], result.pvalues["treated:after"], alternative)
 
