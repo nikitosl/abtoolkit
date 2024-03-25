@@ -24,8 +24,7 @@ class StatTestsSimulation:
 
     def __init__(
         self,
-        control: pd.Series,
-        test: pd.Series,
+        variable: pd.Series,
         alternative: Literal["less", "greater", "two-sided"],
         stattests_list: List[str],
         sample_size: int,
@@ -33,41 +32,30 @@ class StatTestsSimulation:
         mde: float,
         alpha_level: float = 0.05,
         power: float = 0.8,
-        control_previous_values: pd.Series = None,
-        test_previous_values: pd.Series = None,
-        control_cuped_covariant: pd.Series = None,
-        test_cuped_covariant: pd.Series = None,
-        control_additional_vars: List[pd.Series] = None,
-        test_additional_vars: List[pd.Series] = None,
+        previous_values: pd.Series = None,
+        cuped_covariant: pd.Series = None,
+        additional_vars: List[pd.Series] = None,
     ):
         """
         Simulates AA and AB tests for given stat-tests. Prints result (alpha and power) for each test
         and builds plot for p-value distributions.
 
-        :param control: control variable
-        :param test: test variable
+        :param variable: variable for simulation
         :param stattests_list: list of stat-tests for estimation
         :param sample_size: number of examples to sample from variables in each iteration
         :param experiments_num: number of experiments to perform for each stat-test
         :param mde: minimal detectable effect, used to perform AB test (add to test variable)
         :param alpha_level: test alpha-level
         :param power: test power
-        :param control_previous_values: previous values of control variable used to reduce variance and speedup
+        :param previous_values: previous values of variable used to reduce variance and speedup
         test in difference-in-difference test
-        :param test_previous_values: previous values of test variable used to reduce variance and speedup test
-        in difference-in-difference test
-        :param control_cuped_covariant: covariant for control group variable used to reduce variance and speedup test
+        :param cuped_covariant: covariant for variable used to reduce variance and speedup test
         in cuped test
-        :param test_cuped_covariant: covariant for test group variable used to reduce variance and speedup test
-        in cuped test
-        :param control_additional_vars: list of additional variables for control group variable used to
-        reduce variance and speedup test in 'regression_with_additional_variables' test
-        :param test_additional_vars: list of additional variables for test group variable used to
-        reduce variance and speedup test in 'regression_with_additional_variables' test
+        :param additional_vars: list of additional variables used to
+        reduce variance of main variable and speedup test in 'regression_with_additional_variables' test
         """
 
-        self.control = control
-        self.test = test
+        self.variable = variable
 
         self.alternative = alternative
         self.stattests_list = stattests_list
@@ -88,12 +76,9 @@ class StatTestsSimulation:
         self.info = {}
 
         # Optional
-        self.control_previous_values = control_previous_values
-        self.test_previous_values = test_previous_values
-        self.control_cuped_covariant = control_cuped_covariant
-        self.test_cuped_covariant = test_cuped_covariant
-        self.control_additional_vars = control_additional_vars
-        self.test_additional_vars = test_additional_vars
+        self.previous_values = previous_values
+        self.cuped_covariant = cuped_covariant
+        self.additional_vars = additional_vars
 
     def plot_p_values(self):
         """
@@ -196,8 +181,8 @@ class StatTestsSimulation:
         :param mde: minimal detectable effect, to sum with test variable
         :return: p_value
         """
-        control_sample = self.control.sample(self.sample_size, replace=True)
-        test_sample = self.test.sample(self.sample_size, replace=True)
+        control_sample = self.variable.sample(self.sample_size, replace=True)
+        test_sample = self.variable.sample(self.sample_size, replace=True)
         test_sample += mde
 
         return ttest(control_sample, test_sample, self.alternative)
@@ -208,13 +193,13 @@ class StatTestsSimulation:
         :param mde: minimal detectable effect, to sum with test variable
         :return: p_value
         """
-        control_index_sample = self.control.index[np.random.randint(0, len(self.control), size=self.sample_size)]
-        test_index_sample = self.test.index[np.random.randint(0, len(self.test), size=self.sample_size)]
+        control_index_sample = self.variable.index[np.random.randint(0, len(self.variable), size=self.sample_size)]
+        test_index_sample = self.variable.index[np.random.randint(0, len(self.variable), size=self.sample_size)]
 
-        control_sample = self.control.loc[control_index_sample]
-        control_pre_sample = self.control_previous_values.loc[control_index_sample]
-        test_sample = self.test.loc[test_index_sample]
-        test_pre_sample = self.test_previous_values.loc[test_index_sample]
+        control_sample = self.variable.loc[control_index_sample]
+        control_pre_sample = self.previous_values.loc[control_index_sample]
+        test_sample = self.variable.loc[test_index_sample]
+        test_pre_sample = self.variable.loc[test_index_sample]
         test_sample += mde
 
         return cuped_ttest(control_sample, control_pre_sample, test_sample, test_pre_sample, self.alternative)
@@ -225,13 +210,13 @@ class StatTestsSimulation:
         :param mde: minimal detectable effect, to sum with test variable
         :return: p_value
         """
-        control_index_sample = self.control.index[np.random.randint(0, len(self.control), size=self.sample_size)]
-        test_index_sample = self.test.index[np.random.randint(0, len(self.test), size=self.sample_size)]
+        control_index_sample = self.variable.index[np.random.randint(0, len(self.variable), size=self.sample_size)]
+        test_index_sample = self.variable.index[np.random.randint(0, len(self.variable), size=self.sample_size)]
 
-        control_sample = self.control.loc[control_index_sample]
-        control_covariant_sample = self.control_cuped_covariant.loc[control_index_sample]
-        test_sample = self.test.loc[test_index_sample]
-        test_covariant_sample = self.test_cuped_covariant.loc[test_index_sample]
+        control_sample = self.variable.loc[control_index_sample]
+        control_covariant_sample = self.cuped_covariant.loc[control_index_sample]
+        test_sample = self.variable.loc[test_index_sample]
+        test_covariant_sample = self.cuped_covariant.loc[test_index_sample]
         test_sample += mde
 
         return cuped_ttest(
@@ -244,8 +229,8 @@ class StatTestsSimulation:
         :param mde: minimal detectable effect, to sum with test variable
         :return: p_value
         """
-        control_sample = self.control.sample(self.sample_size, replace=True)
-        test_sample = self.test.sample(self.sample_size, replace=True)
+        control_sample = self.variable.sample(self.sample_size, replace=True)
+        test_sample = self.variable.sample(self.sample_size, replace=True)
         test_sample += mde
 
         return regression_test(control_sample, test_sample, self.alternative)
@@ -256,13 +241,13 @@ class StatTestsSimulation:
         :param mde: minimal detectable effect, to sum with test variable
         :return: p_value
         """
-        control_index_sample = self.control.index[np.random.randint(0, len(self.control), size=self.sample_size)]
-        test_index_sample = self.test.index[np.random.randint(0, len(self.test), size=self.sample_size)]
+        control_index_sample = self.variable.index[np.random.randint(0, len(self.variable), size=self.sample_size)]
+        test_index_sample = self.variable.index[np.random.randint(0, len(self.variable), size=self.sample_size)]
 
-        control_sample = self.control.loc[control_index_sample]
-        control_previous_sample = self.control_previous_values.loc[control_index_sample]
-        test_sample = self.test.loc[test_index_sample]
-        test_previous_sample = self.test_previous_values.loc[test_index_sample]
+        control_sample = self.variable.loc[control_index_sample]
+        control_previous_sample = self.previous_values.loc[control_index_sample]
+        test_sample = self.variable.loc[test_index_sample]
+        test_previous_sample = self.previous_values.loc[test_index_sample]
         test_sample += mde
 
         return did_regression_test(
@@ -275,13 +260,13 @@ class StatTestsSimulation:
         :param mde: minimal detectable effect, to sum with test variable
         :return: p_value
         """
-        control_index_sample = self.control.index[np.random.randint(0, len(self.control), size=self.sample_size)]
-        test_index_sample = self.test.index[np.random.randint(0, len(self.test), size=self.sample_size)]
+        control_index_sample = self.variable.index[np.random.randint(0, len(self.variable), size=self.sample_size)]
+        test_index_sample = self.variable.index[np.random.randint(0, len(self.variable), size=self.sample_size)]
 
-        control_sample = self.control.loc[control_index_sample]
-        control_add_samples = [a.loc[control_index_sample] for a in self.control_additional_vars]
-        test_sample = self.test.loc[test_index_sample]
-        test_add_samples = [a.loc[test_index_sample] for a in self.test_additional_vars]
+        control_sample = self.variable.loc[control_index_sample]
+        control_add_samples = [a.loc[control_index_sample] for a in self.additional_vars]
+        test_sample = self.variable.loc[test_index_sample]
+        test_add_samples = [a.loc[test_index_sample] for a in self.additional_vars]
         test_sample += mde
 
         return additional_vars_regression_test(
