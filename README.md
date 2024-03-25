@@ -13,7 +13,8 @@ calculate_sample_size_by_mde(
     std=variable.std(),
     alpha=alpha_level, 
     power=power, 
-    mde=mde
+    mde=mde,
+    alternative="two-sided"
 )
 ```
 
