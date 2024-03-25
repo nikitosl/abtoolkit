@@ -199,7 +199,7 @@ class StatTestsSimulation:
         control_sample = self.variable.loc[control_index_sample]
         control_pre_sample = self.previous_values.loc[control_index_sample]
         test_sample = self.variable.loc[test_index_sample]
-        test_pre_sample = self.variable.loc[test_index_sample]
+        test_pre_sample = self.previous_values.loc[test_index_sample]
         test_sample += mde
 
         return cuped_ttest(control_sample, control_pre_sample, test_sample, test_pre_sample, self.alternative)
