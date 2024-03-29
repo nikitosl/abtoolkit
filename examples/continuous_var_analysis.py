@@ -1,5 +1,3 @@
-import numpy as np
-
 from abtoolkit.continuous.simulation import StatTestsSimulation
 from abtoolkit.continuous.utils import estimate_sample_size_by_mde
 from abtoolkit.utils import generate_data

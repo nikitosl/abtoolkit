@@ -8,8 +8,9 @@ For continuous and discrete variables.
 ## Continuous variables analysis
 #### Sample size estimation:
 ```
-from abtoolkit.continuous.utils import calculate_sample_size_by_mde
-calculate_sample_size_by_mde(
+from abtoolkit.continuous.utils import estimate_sample_size_by_mde
+
+estimate_sample_size_by_mde(
     std=variable.std(),
     alpha=alpha_level, 
     power=power, 
@@ -77,17 +78,39 @@ of treatment impact.
 ## Discrete variables analysis
 #### Sample size estimation:
 ```
-from abtoolkit.discrete.utils import estimate_ci_binomial
-estimate_ci_binomial(
+from abtoolkit.discrete.utils import estimate_sample_size_by_mde
+
+estimate_sample_size_by_mde(
     p, 
     sample_size, 
-    alpha=0.05
+    alpha=0.05,
+    alternative="two-sided"
 )
 ```
 #### AA and AB tests simulation:
-To Be Done
+```
+from abtoolkit.discrete.simulation import StatTestsSimulation
+
+sim = StatTestsSimulation(
+        count=variable.sum(),
+        objects_num=variable.count(),
+        stattests_list=["conversion_ztest"],
+        alternative=alternative,
+        experiments_num=experiments_num,  # Run each stattest 10 times
+        sample_size=sample_size,  # Take 50 samples from variables
+        mde=mde,  # Trying to detect this effect (very big for our simulated data)
+        alpha_level=alpha_level,  # Fix alpha level on 5%
+    )
+    info = sim.run()  # Get dictionary with information about tests
+    sim.print_results()  # Print results of simulation
+    sim.plot_p_values()  # Plot p-values distribution
+```
+Output:
+![discrete-output-plot.png](static%2Fdiscrete-output-plot.png)
+![discrete-p-value-plot.png](static%2Fdiscrete-p-value-plot.png)
+
 #### Next stat tests implemented for treatment effect estimation:
-To Be Done
+- ***Conversion Z-Test*** estimates treatment effect on conversion variable using z-test
 
 ---
 You can find examples of toolkit usage in [examples/](https://github.com/nikitosl/abtoolkit/tree/master/examples) directory.
