@@ -42,7 +42,7 @@ def ttest(
     alternative: Literal["less", "greater", "two-sided"],
 ) -> float:
     """
-    Simple two-side t-test
+    Simple t-test
     :param control: pd.Series for control sample
     :param test: pd.Series for test sample
     :param alternative: alternative hypothesis ("less", "greater" or "two-sided").
