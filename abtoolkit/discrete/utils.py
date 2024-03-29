@@ -2,21 +2,40 @@
 Utils functions for discrete variable analysis
 """
 
+from typing import Literal
+
 import numpy as np
 from scipy import stats
 
 
-def calculate_sample_size(p, alpha, power, mde) -> int:
+def estimate_sample_size_by_mde(
+    p: float,
+    alpha: float,
+    power: float,
+    mde: float,
+    alternative: Literal["less", "greater", "two-sided"],
+) -> int:
     """
-    Calculate sample size need for significant test using p, alpha, power, mde
+    Estimate sample size need for significant test using p, alpha, power, mde
     :param p: probability of positive sample
     :param alpha: level of significance of A/B test
     :param power: probability of observing a statistically significant result at level alpha
     if a true effect of a certain magnitude is present
     :param mde: minimal detectable effect, the difference in results to detect
+    :param alternative: alternative hypothesis ("less", "greater" or "two-sided").
+    * 'two-sided' : means are equal;
+    * 'less': the mean of the control sample is less than the mean of the test sample;
+    * 'greater': the mean of the control sample is greater than the mean of the test sample;
     :return: sample size needed for each group
     """
-    z = stats.norm.ppf(q=1 - alpha / 2) + stats.norm.ppf(q=power)
+
+    # Todo: When alternative = "less" or "greater" we get undersampling (power less then 0.8).
+    if alternative == "two-sided":
+        pass
+
+    alpha = alpha / 2
+
+    z = stats.norm.ppf(q=1 - alpha) + stats.norm.ppf(q=power)
     size = 2 * p * (1 - p) * (z / mde) ** 2
     return round(size) + 1
 

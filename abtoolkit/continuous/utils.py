@@ -5,34 +5,7 @@ Utils functions for continuous variables
 from typing import Tuple, Literal
 
 import numpy as np
-import pandas as pd
 from scipy import stats
-
-
-def generate_data(size, add_index=True, index=None) -> pd.Series:
-    """
-    Generates data for continuous variables test. Regression technique require special multi-index [entity, dt].
-    :param size: sample size for generation
-    :param add_index: whether to add multiindex or not
-    :param index: index for generated sample if add_index is true.
-    If add_index is false then multiindex will be generated
-    :return:  sample
-    """
-
-    variable = np.random.normal(0, 3, size=size)
-    if add_index:
-        if index is None:
-            # Generate random index
-            entity_index = np.random.choice([1, 2, 3], size=size)
-            time_index = np.arange(0, size, 1)
-            result_sr = pd.Series(variable, index=[entity_index, time_index])
-        else:
-            # Add existing index
-            result_sr = pd.Series(variable, index=index)
-    else:
-        # Without index
-        result_sr = pd.Series(variable)
-    return result_sr
 
 
 def estimate_confidence_interval(

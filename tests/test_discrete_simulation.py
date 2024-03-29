@@ -1,31 +1,25 @@
 import unittest
-from abtoolkit.continuous.simulation import StatTestsSimulation
+from abtoolkit.discrete.simulation import StatTestsSimulation
 from abtoolkit.utils import generate_data
 
 
 class TestStatTestsSimulation(unittest.TestCase):
-    tests = ["ttest", "diff_ttest", "regression_test", "cuped_ttest",
-             "did_regression_test", "additional_vars_regression_test"]
+    tests = ["conversion_ztest"]
 
     def test_success(self):
-        variable = generate_data(100, distribution_type="cont")
-        previous_value = generate_data(100, distribution_type="cont", index=variable.index).rename("prev")
-
+        variable = generate_data(100, distribution_type="disc")
         experiments_num = 10
 
         sim = StatTestsSimulation(
-            variable,
+            count=variable.sum(),
+            objects_num=len(variable),
             stattests_list=self.tests,
             experiments_num=experiments_num,
             alternative="two-sided",
             sample_size=50,
-            mde=10,
+            mde=0.1,
             alpha_level=0.05,
             power=0.8,
-
-            previous_values=previous_value,
-            cuped_covariant=previous_value,
-            additional_vars=[previous_value],
         )
         info = sim.run()
 
