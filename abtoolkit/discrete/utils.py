@@ -75,7 +75,6 @@ def estimate_mde_by_sample_size(
     return mde
 
 
-
 def estimate_ci_binomial(p, sample_size, alpha):
     """
     Confidence interval for Binomial variable
