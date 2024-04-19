@@ -48,8 +48,8 @@ simulation.print_results()  # Print results of simulation
 simulation.plot_p_values()  # Plot p-values distribution
 ```
 Output:
-![output-plot.png](static%2Foutput-plot.png)
-![p-value-plot.png](static%2Fp-value-plot.png)
+![output-plot.png](https://github.com/nikitosl/abtoolkit/blob/master/static%2Foutput-plot.png)
+![p-value-plot.png](https://github.com/nikitosl/abtoolkit/blob/master/static%2Fp-value-plot.png)
 
 Full example of usage you can find in ```examples/continuous_var_analysis.py``` script.
 
@@ -106,8 +106,8 @@ sim = StatTestsSimulation(
     sim.plot_p_values()  # Plot p-values distribution
 ```
 Output:
-![discrete-output-plot.png](static%2Fdiscrete-output-plot.png)
-![discrete-p-value-plot.png](static%2Fdiscrete-p-value-plot.png)
+![discrete-output-plot.png](https://github.com/nikitosl/abtoolkit/blob/master/static%2Fdiscrete-output-plot.png)
+![discrete-p-value-plot.png](https://github.com/nikitosl/abtoolkit/blob/master/static%2Fdiscrete-p-value-plot.png)
 
 #### Next stat tests implemented for treatment effect estimation:
 - ***Conversion Z-Test*** estimates treatment effect on conversion variable using z-test
