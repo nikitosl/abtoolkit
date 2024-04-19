@@ -1,13 +1,10 @@
 [build-system]
-requires = [
-    "setuptools>=61.0",
-    "setuptools-scm>=8.0"
-]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "abtoolkit"
-dynamic = ["version"]
+version = "1.2.1"
 authors = [
   { name="Nikita Altukhov", email="altuxov.nikita@gmail.com" },
 ]
