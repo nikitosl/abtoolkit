@@ -128,6 +128,7 @@ class BaseSimulationClass:
         if len(self.info) == 0:
             return
 
+        # AB
         x_axis = np.linspace(0, 1, 1000)
         for test, test_info in self.info.items():
             ab_pvalues = np.array(test_info["ab_pvalues"])
@@ -137,6 +138,18 @@ class BaseSimulationClass:
         plt.plot([self.alpha_level, self.alpha_level], [0, 1], "--k", alpha=0.8)
         plt.plot([0, 1], [self.power, self.power], "--k", alpha=0.8)
         plt.title("P-Value Distribution for AB Simulation", size=12)
+        plt.xlabel("p-value", size=10)
+        plt.legend(fontsize=10)
+        plt.grid()
+        plt.show()
+
+        # AA
+        for test, test_info in self.info.items():
+            aa_pvalues = np.array(test_info["aa_pvalues"])
+            y_axis = [np.mean(aa_pvalues < x) for x in x_axis]
+            plt.plot(x_axis, y_axis, label=test)
+        plt.plot([0, 1], [0, 1], '--k', alpha=0.8)
+        plt.title("P-Value Distribution for AA Simulation", size=12)
         plt.xlabel("p-value", size=10)
         plt.legend(fontsize=10)
         plt.grid()
