@@ -2,15 +2,57 @@
 Utils for stat analysis
 """
 
-from typing import Literal, List
+from typing import Literal, List, Callable
 from typing import Union
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
+from scipy.stats import shapiro
 
 from abtoolkit.discrete.utils import estimate_ci_binomial
+
+
+def check_clt(
+    variable,
+    do_plot_distribution: bool = True,
+    sampling_length: int = None,
+    simulations_num: int = 5000,
+    metric_f: Callable[[List, any], float] = np.mean,
+    **metric_f_kwargs,
+) -> float:
+    """
+    Tests the central limit theorem by sampling subsamples of length `sampling_length`, `simulations_num` times.
+    `metric_f` is then taken from a subsample and the distribution of such values is compared to the normal
+    distribution using the Shapiro-Wilk test. Returns p-value, where the null hypothesis that the weights were drawn
+    from a normal distribution and alternative is another distribution. So if p-value lower 0.05 then variable doesn't
+    consider CLT.
+    :param variable: array-like, variable we want to test
+    :param sampling_length: subsample size we take on each simulation step, if None then take length(variable).
+    Default = None
+    :param simulations_num: number of simulations, default = 5000
+    :param metric_f: function to take from subsample, default = numpy.mean(). Additional args could be given using
+    metric_kwargs parameter
+    :param do_plot_distribution: whether to plot distribution or not, default = True
+    :return: p-value of Shapiro-Wilk test for normality
+    """
+
+    sampling_length = len(variable) if sampling_length is None else sampling_length
+    values = []
+    for _ in tqdm(range(simulations_num)):
+        sample = np.random.choice(variable, size=sampling_length, replace=True)
+        values.append(metric_f(sample, **metric_f_kwargs))
+
+    # Shapiro-Wilk test
+    res = shapiro(values)
+
+    if do_plot_distribution:
+        plt.hist(values, bins=100)
+        plt.title(f"Distribution for {metric_f.__name__}. Normality p-value: {res.pvalue}")
+        plt.show()
+
+    return res.pvalue
 
 
 def generate_data(
