@@ -148,7 +148,7 @@ class BaseSimulationClass:
             aa_pvalues = np.array(test_info["aa_pvalues"])
             y_axis = [np.mean(aa_pvalues < x) for x in x_axis]
             plt.plot(x_axis, y_axis, label=test)
-        plt.plot([0, 1], [0, 1], '--k', alpha=0.8)
+        plt.plot([0, 1], [0, 1], "--k", alpha=0.8)
         plt.title("P-Value Distribution for AA Simulation", size=12)
         plt.xlabel("p-value", size=10)
         plt.legend(fontsize=10)
