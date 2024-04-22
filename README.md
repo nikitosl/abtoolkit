@@ -112,5 +112,17 @@ Output:
 #### Next stat tests implemented for treatment effect estimation:
 - ***Conversion Z-Test*** estimates treatment effect on conversion variable using z-test
 
+## Another tools
+#### Central Limit Theorem check
+Helps you check if your variable meets the Central Limit Theorem and what sample size you need for it to meet.
+```
+from abtoolkit.utils import check_clt
+import numpy as np
+
+var = np.random.chisquare(df=2, size=10000)
+p_value = check_clt(var, do_plot_distribution=True)
+```
+![discrete-output-plot.png](https://raw.githubusercontent.com/nikitosl/abtoolkit/master/static%2Fclt.png)
+
 ---
 You can find examples of toolkit usage in [examples/](https://github.com/nikitosl/abtoolkit/tree/master/examples) directory.
