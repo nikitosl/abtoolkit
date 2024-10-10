@@ -60,6 +60,7 @@ def bayesian_test(
     :param test_objects_num: number of all samples in test group
     :return: probability that difference between distributions not exists (probability of null hypothesis)
     """
+
     def diff_probability(beta1, beta2):
         a1, b1 = beta1.args[0], beta1.args[1]
         a2, b2 = beta2.args[0], beta2.args[1]
