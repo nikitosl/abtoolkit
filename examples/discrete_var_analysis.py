@@ -26,7 +26,7 @@ if __name__ == '__main__':
     sim = StatTestsSimulation(
         count=variable.sum(),
         objects_num=variable.count(),
-        stattests_list=["conversion_ztest"],
+        stattests_list=["conversion_ztest", "bayesian_test"],
         alternative=alternative,
         experiments_num=experiments_num,  # Run each stattest 10 times
         sample_size=sample_size,  # Take 50 samples from variables

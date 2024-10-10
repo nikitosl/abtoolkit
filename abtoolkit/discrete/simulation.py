@@ -7,6 +7,7 @@ from typing import List, Literal
 import numpy as np
 
 from abtoolkit.discrete.stattests import conversion_ztest
+from abtoolkit.discrete.stattests import bayesian_test
 from abtoolkit.utils import BaseSimulationClass
 
 
@@ -55,6 +56,7 @@ class StatTestsSimulation(BaseSimulationClass):
         self.p = self.count / self.objects_num
         self.stattests_func_map = {
             "conversion_ztest": self.simulate_conversion_ztest,
+            "bayesian_test": self.simulate_bayesian_test,
         }
 
     def simulate_conversion_ztest(self, mde: float) -> float:
@@ -68,3 +70,15 @@ class StatTestsSimulation(BaseSimulationClass):
         test_count = np.random.binomial(n=self.sample_size, p=self.p + mde)
 
         return conversion_ztest(control_count, self.sample_size, test_count, self.sample_size, self.alternative)
+
+    def simulate_bayesian_test(self, mde: float) -> float:
+        """
+        Simulate bayesian test
+        :param mde: minimal detectable effect, to sum with test variable
+        :return: p_value
+        """
+
+        control_count = np.random.binomial(n=self.sample_size, p=self.p)
+        test_count = np.random.binomial(n=self.sample_size, p=self.p + mde)
+
+        return bayesian_test(control_count, self.sample_size, test_count, self.sample_size)
