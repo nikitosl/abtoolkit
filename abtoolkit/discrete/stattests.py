@@ -14,7 +14,7 @@ def conversion_ztest(
     control_objects_num: int,
     test_count: int,
     test_objects_num: int,
-    alternative: Literal["less", "greater", "two-sided"],
+    alternative: Literal["less", "greater"],
 ) -> float:
     """
     Conversion z-test
@@ -51,6 +51,7 @@ def bayesian_test(
     control_objects_num: int,
     test_count: int,
     test_objects_num: int,
+    alternative: Literal["less", "greater", "two-sided"],
 ) -> float:
     """
     Bayesian Test
@@ -58,25 +59,25 @@ def bayesian_test(
     :param control_objects_num: number of all samples in control group
     :param test_count: number of positive samples in test group
     :param test_objects_num: number of all samples in test group
+    :param alternative: alternative hypothesis ("less", "greater" or "two-sided").
+    * 'less': the conversion of the control sample is less than the mean of the test sample;
+    * 'greater': the conversion of the control sample is greater than the mean of the test sample;
     :return: probability that difference between distributions not exists (probability of null hypothesis)
     """
+    if alternative == "less":
+        a1, b1 = test_count + 1, test_objects_num - test_count + 1
+        a2, b2 = control_count + 1, control_objects_num - control_count + 1
+    else:
+        a2, b2 = test_count + 1, test_objects_num - test_count + 1
+        a1, b1 = control_count + 1, control_objects_num - control_count + 1
 
-    def diff_probability(beta1, beta2):
-        a1, b1 = beta1.args[0], beta1.args[1]
-        a2, b2 = beta2.args[0], beta2.args[1]
+    ap = np.exp(lgamma(a1 + b1) + lgamma(a1 + a2) - (lgamma(a1 + b1 + a2) + lgamma(a1)))
 
-        ap = np.exp(lgamma(a1 + b1) + lgamma(a1 + a2) - (lgamma(a1 + b1 + a2) + lgamma(a1)))
+    s = 0
+    while b2 > 1:
+        b2 -= 1
+        num = lgamma(a1 + a2) + lgamma(b1 + b2) + lgamma(a1 + b1) + lgamma(a2 + b2)
+        den = lgamma(a1) + lgamma(b1) + lgamma(a2) + lgamma(b2) + lgamma(a1 + b1 + a2 + b2)
+        s += np.exp(num - den) / b2
 
-        s = 0
-        while b2 > 1:
-            b2 -= 1
-            num = lgamma(a1 + a2) + lgamma(b1 + b2) + lgamma(a1 + b1) + lgamma(a2 + b2)
-            den = lgamma(a1) + lgamma(b1) + lgamma(a2) + lgamma(b2) + lgamma(a1 + b1 + a2 + b2)
-            s += np.exp(num - den) / b2
-
-        return ap + s
-
-    beta_control = stats.beta(control_count + 1, control_objects_num - control_count + 1)
-    beta_test = stats.beta(test_count + 1, test_objects_num - test_count + 1)
-
-    return 1 - diff_probability(beta_test, beta_control)
+    return 1 - (ap + s)

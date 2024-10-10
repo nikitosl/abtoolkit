@@ -15,7 +15,8 @@ class TestStatTests(unittest.TestCase):
             len(control_sr),
             test_sr.sum(),
             len(test_sr),
-            "less")
+            "less"
+        )
         self.assertTrue(0 <= p_value <= 1, f"Wrong value for p-value: {p_value}")
 
     def test_bayesian_test(self):
@@ -25,6 +26,8 @@ class TestStatTests(unittest.TestCase):
             control_sr.sum(),
             len(control_sr),
             test_sr.sum(),
-            len(test_sr))
+            len(test_sr),
+            'less'
+        )
         self.assertTrue(0 <= p_value <= 1, f"Wrong value for p-value: {p_value}")
 
