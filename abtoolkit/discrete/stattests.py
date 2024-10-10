@@ -60,25 +60,20 @@ def bayesian_test(
     :param test_objects_num: number of all samples in test group
     :return: probability that difference between distributions not exists (probability of null hypothesis)
     """
-
-    def h(a, b, c, d):
-        num = lgamma(a + c) + lgamma(b + d) + lgamma(a + b) + lgamma(c + d)
-        den = lgamma(a) + lgamma(b) + lgamma(c) + lgamma(d) + lgamma(a + b + c + d)
-        return np.exp(num - den)
-
-    def g0(a, b, c):
-        return np.exp(lgamma(a + b) + lgamma(a + c) - (lgamma(a + b + c) + lgamma(a)))
-
-    def hiter(a, b, c, d):
-        while d > 1:
-            d -= 1
-            yield h(a, b, c, d) / d
-
-    def g(a, b, c, d):
-        return g0(a, b, c) + sum(hiter(a, b, c, d))
-
     def diff_probability(beta1, beta2):
-        return g(beta1.args[0], beta1.args[1], beta2.args[0], beta2.args[1])
+        a1, b1 = beta1.args[0], beta1.args[1]
+        a2, b2 = beta2.args[0], beta2.args[1]
+
+        ap = np.exp(lgamma(a1 + b1) + lgamma(a1 + a2) - (lgamma(a1 + b1 + a2) + lgamma(a1)))
+
+        s = 0
+        while b2 > 1:
+            b2 -= 1
+            num = lgamma(a1 + a2) + lgamma(b1 + b2) + lgamma(a1 + b1) + lgamma(a2 + b2)
+            den = lgamma(a1) + lgamma(b1) + lgamma(a2) + lgamma(b2) + lgamma(a1 + b1 + a2 + b2)
+            s += np.exp(num - den) / b2
+
+        return ap + s
 
     beta_control = stats.beta(control_count + 1, control_objects_num - control_count + 1)
     beta_test = stats.beta(test_count + 1, test_objects_num - test_count + 1)
