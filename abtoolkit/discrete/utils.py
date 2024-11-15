@@ -2,7 +2,8 @@
 Utils functions for discrete variable analysis
 """
 
-from typing import Literal
+from math import lgamma
+from typing import Literal, Tuple
 
 import numpy as np
 from scipy import stats
@@ -75,7 +76,7 @@ def estimate_mde_by_sample_size(
     return mde
 
 
-def estimate_ci_binomial(p, sample_size, alpha):
+def estimate_ci_binomial(p: float, sample_size: int, alpha: float) -> Tuple[float, float]:
     """
     Confidence interval for Binomial variable
     :param p: probability of positive
@@ -86,3 +87,24 @@ def estimate_ci_binomial(p, sample_size, alpha):
     t = stats.norm.ppf(1 - alpha / 2, loc=0, scale=1)
     std_n = np.sqrt(p * (1 - p) / sample_size)
     return p - t * std_n, p + t * std_n
+
+
+def compare_beta_distributions(a1: int, b1: int, a2: int, b2: int):
+    """
+    Calculate probability that Beta1 distribution higher than Beta2
+    :param a1: alpa for Beta1
+    :param b1: beta for Beta1
+    :param a2: alpa for Beta2
+    :param b2: beta for Beta2
+    :return: probability of Beta1 distribution higher than Beta2
+    """
+    ap = np.exp(lgamma(a1 + b1) + lgamma(a1 + a2) - (lgamma(a1 + b1 + a2) + lgamma(a1)))
+
+    s = 0
+    while b2 > 1:
+        b2 -= 1
+        num = lgamma(a1 + a2) + lgamma(b1 + b2) + lgamma(a1 + b1) + lgamma(a2 + b2)
+        den = lgamma(a1) + lgamma(b1) + lgamma(a2) + lgamma(b2) + lgamma(a1 + b1 + a2 + b2)
+        s += np.exp(num - den) / b2
+
+    return 1 - (ap + s)

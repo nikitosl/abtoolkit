@@ -11,7 +11,7 @@ if __name__ == '__main__':
     alpha_level = 0.05
     power = 0.8
     examples_num = 2000  # Number of examples in test and control group
-    experiments_num = 200  # Number of experiments to run for each stattest
+    experiments_num = 1000  # Number of experiments to run for each stattest
     alternative = 'less'
 
     # Generate variable
@@ -20,7 +20,7 @@ if __name__ == '__main__':
     proba = variable.sum() / variable.count()
 
     # Estimate sample_size need for test
-    sample_size = estimate_sample_size_by_mde(p=proba, alpha=alpha_level, power=power, mde=mde, alternative="two-sided")
+    sample_size = estimate_sample_size_by_mde(p=proba, alpha=alpha_level, power=power, mde=mde, alternative=alternative)
     print(f"Minimum sample size for each group is {sample_size}")
 
     sim = StatTestsSimulation(
@@ -32,6 +32,9 @@ if __name__ == '__main__':
         sample_size=sample_size,  # Take 50 samples from variables
         mde=mde,  # Trying to detect this effect (very big for our simulated data)
         alpha_level=alpha_level,  # Fix alpha level on 5%
+        power=power,
+        bayesian_prior_positives=1,
+        bayesian_prior_negatives=1,
     )
     info = sim.run()  # Get dictionary with information about tests
     sim.print_results()  # Print results of simulation

@@ -4,7 +4,7 @@ from abtoolkit.utils import generate_data
 
 
 class TestStatTestsSimulation(unittest.TestCase):
-    tests = ["conversion_ztest"]
+    tests = ["conversion_ztest", "bayesian_test"]
 
     def test_success(self):
         variable = generate_data(100, distribution_type="disc")

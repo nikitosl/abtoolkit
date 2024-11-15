@@ -27,6 +27,8 @@ class StatTestsSimulation(BaseSimulationClass):
         mde: float,
         alpha_level: float = 0.05,
         power: float = 0.8,
+        bayesian_prior_positives: int = 1,
+        bayesian_prior_negatives: int = 1,
     ):
         """
         Simulates AA and AB tests for given stat-tests. Prints result (alpha and power) for each test
@@ -40,6 +42,8 @@ class StatTestsSimulation(BaseSimulationClass):
         :param mde: minimal detectable effect, used to perform AB test (add to test variable)
         :param alpha_level: test alpha-level
         :param power: test power
+        :param bayesian_prior_positives: prior positive examples for bayesian stattest (default = 1)
+        :param bayesian_prior_negatives: prior negative examples for bayesian stattest (default = 1)
         """
         super().__init__(
             sample_size=sample_size,
@@ -58,6 +62,8 @@ class StatTestsSimulation(BaseSimulationClass):
             "conversion_ztest": self.simulate_conversion_ztest,
             "bayesian_test": self.simulate_bayesian_test,
         }
+        self.bayesian_prior_positives = bayesian_prior_positives
+        self.bayesian_prior_negatives = bayesian_prior_negatives
 
     def simulate_conversion_ztest(self, mde: float) -> float:
         """
@@ -81,4 +87,12 @@ class StatTestsSimulation(BaseSimulationClass):
         control_count = np.random.binomial(n=self.sample_size, p=self.p)
         test_count = np.random.binomial(n=self.sample_size, p=self.p + mde)
 
-        return bayesian_test(control_count, self.sample_size, test_count, self.sample_size, self.alternative)
+        return bayesian_test(
+            control_count,
+            self.sample_size,
+            test_count,
+            self.sample_size,
+            self.alternative,
+            self.bayesian_prior_positives,
+            self.bayesian_prior_negatives,
+        )

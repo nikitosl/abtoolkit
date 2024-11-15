@@ -2,11 +2,11 @@
 Stat tests for discrete variable analysis
 """
 
-from math import lgamma
 from typing import Literal
 
 import numpy as np
 from scipy import stats
+from abtoolkit.discrete.utils import compare_beta_distributions
 
 
 def conversion_ztest(
@@ -51,33 +51,29 @@ def bayesian_test(
     control_objects_num: int,
     test_count: int,
     test_objects_num: int,
-    alternative: Literal["less", "greater", "two-sided"],
+    alternative: Literal["less", "greater"],
+    prior_positives_count: int = 1,
+    prior_negatives_count: int = 1,
 ) -> float:
     """
     Bayesian Test
-    :param control_count: number of positive samples in control group
-    :param control_objects_num: number of all samples in control group
-    :param test_count: number of positive samples in test group
-    :param test_objects_num: number of all samples in test group
+    :param control_count: posterior number of positive samples in control group
+    :param control_objects_num: posterior number of all samples in control group
+    :param test_count: posterior number of positive samples in test group
+    :param test_objects_num: posterior number of all samples in test group
     :param alternative: alternative hypothesis ("less", "greater" or "two-sided").
-    * 'less': the conversion of the control sample is less than the mean of the test sample;
-    * 'greater': the conversion of the control sample is greater than the mean of the test sample;
+    * 'less': the conversion of the control sample is less than the convertion in the test sample;
+    * 'greater': the conversion of the control sample is greater than the conversion in the test sample;
+    :param prior_positives_count: prior number of positive samples (alpha in Beta distribution)
+    :param prior_negatives_count: prior number of negative samples (beta in Beta distribution)
     :return: probability that difference between distributions not exists (probability of null hypothesis)
     """
+
+    # calculate posterior params for distributions
+    alpha_1, beta_1 = test_count + prior_positives_count, test_objects_num - test_count + prior_negatives_count
+    alpha_2, beta_2 = control_count + prior_positives_count, control_objects_num - control_count + prior_negatives_count
+
     if alternative == "less":
-        a1, b1 = test_count + 1, test_objects_num - test_count + 1
-        a2, b2 = control_count + 1, control_objects_num - control_count + 1
-    else:
-        a2, b2 = test_count + 1, test_objects_num - test_count + 1
-        a1, b1 = control_count + 1, control_objects_num - control_count + 1
+        return compare_beta_distributions(alpha_1, beta_1, alpha_2, beta_2)
 
-    ap = np.exp(lgamma(a1 + b1) + lgamma(a1 + a2) - (lgamma(a1 + b1 + a2) + lgamma(a1)))
-
-    s = 0
-    while b2 > 1:
-        b2 -= 1
-        num = lgamma(a1 + a2) + lgamma(b1 + b2) + lgamma(a1 + b1) + lgamma(a2 + b2)
-        den = lgamma(a1) + lgamma(b1) + lgamma(a2) + lgamma(b2) + lgamma(a1 + b1 + a2 + b2)
-        s += np.exp(num - den) / b2
-
-    return 1 - (ap + s)
+    return compare_beta_distributions(alpha_2, beta_2, alpha_1, beta_1)
