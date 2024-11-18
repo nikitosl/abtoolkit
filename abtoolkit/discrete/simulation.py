@@ -87,7 +87,7 @@ class StatTestsSimulation(BaseSimulationClass):
         control_count = np.random.binomial(n=self.sample_size, p=self.p)
         test_count = np.random.binomial(n=self.sample_size, p=self.p + mde)
 
-        return bayesian_test(
+        return 1 - bayesian_test(
             control_count,
             self.sample_size,
             test_count,

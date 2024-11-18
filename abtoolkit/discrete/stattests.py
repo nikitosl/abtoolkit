@@ -66,14 +66,16 @@ def bayesian_test(
     * 'greater': the conversion of the control sample is greater than the conversion in the test sample;
     :param prior_positives_count: prior number of positive samples (alpha in Beta distribution)
     :param prior_negatives_count: prior number of negative samples (beta in Beta distribution)
-    :return: probability that difference between distributions not exists (probability of null hypothesis)
+    :return: probability that difference between distributions exists
     """
 
     # calculate posterior params for distributions
     alpha_1, beta_1 = test_count + prior_positives_count, test_objects_num - test_count + prior_negatives_count
     alpha_2, beta_2 = control_count + prior_positives_count, control_objects_num - control_count + prior_negatives_count
 
-    if alternative == "less":
-        return compare_beta_distributions(alpha_1, beta_1, alpha_2, beta_2)
+    probability = compare_beta_distributions(alpha_1, beta_1, alpha_2, beta_2)
 
-    return compare_beta_distributions(alpha_2, beta_2, alpha_1, beta_1)
+    if alternative == "greater":
+        return probability
+
+    return 1 - probability
