@@ -1,7 +1,7 @@
 import unittest
 
 import numpy as np
-from abtoolkit.discrete.stattests import conversion_ztest
+from abtoolkit.discrete.stattests import conversion_ztest, chi_square_test
 from abtoolkit.discrete.stattests import bayesian_test
 from abtoolkit.utils import generate_data
 
@@ -16,6 +16,17 @@ class TestStatTests(unittest.TestCase):
             test_sr.sum(),
             len(test_sr),
             "less"
+        )
+        self.assertTrue(0 <= p_value <= 1, f"Wrong value for p-value: {p_value}")
+
+    def test_chi_square(self):
+        test_sr = generate_data(100, distribution_type="disc")
+        control_sr = generate_data(100, distribution_type="disc")
+        p_value = chi_square_test(
+            control_sr.sum(),
+            len(control_sr),
+            test_sr.sum(),
+            len(test_sr),
         )
         self.assertTrue(0 <= p_value <= 1, f"Wrong value for p-value: {p_value}")
 
