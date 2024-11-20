@@ -93,18 +93,21 @@ estimate_sample_size_by_mde(
 from abtoolkit.discrete.simulation import StatTestsSimulation
 
 sim = StatTestsSimulation(
-        count=variable.sum(),
-        objects_num=variable.count(),
-        stattests_list=["conversion_ztest"],
-        alternative=alternative,
-        experiments_num=experiments_num,  # Run each stattest 10 times
-        sample_size=sample_size,  # Take 50 samples from variables
-        mde=mde,  # Trying to detect this effect (very big for our simulated data)
-        alpha_level=alpha_level,  # Fix alpha level on 5%
-    )
-    info = sim.run()  # Get dictionary with information about tests
-    sim.print_results()  # Print results of simulation
-    sim.plot_p_values()  # Plot p-values distribution
+    count=variable.sum(),
+    objects_num=variable.count(),
+    stattests_list=["conversion_ztest", "bayesian_test", "chi_square_test"],
+    alternative=alternative,
+    experiments_num=experiments_num,  # Run each stattest 10 times
+    sample_size=sample_size,  # Take 50 samples from variables
+    mde=mde,  # Trying to detect this effect (very big for our simulated data)
+    alpha_level=alpha_level,  # Fix alpha level on 5%
+    power=power,
+    bayesian_prior_positives=1,
+    bayesian_prior_negatives=1,
+)
+info = sim.run()  # Get dictionary with information about tests
+sim.print_results()  # Print results of simulation
+sim.plot_p_values()  # Plot p-values distribution
 ```
 Output:
 ![discrete-output-plot.png](https://raw.githubusercontent.com/nikitosl/abtoolkit/master/static%2Fdiscrete-output-plot.png)
@@ -113,6 +116,8 @@ Output:
 
 #### Next stat tests implemented for treatment effect estimation:
 - ***Conversion Z-Test*** estimates treatment effect on conversion variable using z-test
+- ***Bayesian Test*** estimates probability of difference between conversions according to prior knowledge
+- ***Chi-Square Test*** estimates the significance of association between two categorical variables
 
 ## Another tools
 #### Central Limit Theorem check
