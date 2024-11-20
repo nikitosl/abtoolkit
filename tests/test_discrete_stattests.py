@@ -30,6 +30,17 @@ class TestStatTests(unittest.TestCase):
         )
         self.assertTrue(0 <= p_value <= 1, f"Wrong value for p-value: {p_value}")
 
+    def test_chi_square_small_sample_size(self):
+        test_sr = generate_data(5, distribution_type="disc")
+        control_sr = generate_data(5, distribution_type="disc")
+        with self.assertRaises(ValueError):
+            chi_square_test(
+                control_sr.sum(),
+                len(control_sr),
+                test_sr.sum(),
+                len(test_sr),
+            )
+
     def test_bayesian_test(self):
         test_sr = generate_data(100, distribution_type="disc")
         control_sr = generate_data(100, distribution_type="disc")
