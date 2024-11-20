@@ -29,7 +29,8 @@ if __name__ == '__main__':
                         "additional_vars_regression_test"],
         alternative=alternative,
         experiments_num=experiments_num,  # Run each stattest 10 times
-        sample_size=sample_size,  # Take 50 samples from variables
+        treatment_sample_size=sample_size,  # Take 50 samples from variables
+        treatment_split_proportion=0.5,  # Take 50 samples from variables
         mde=mde,  # Trying to detect this effect (very big for our simulated data)
         alpha_level=alpha_level,  # Fix alpha level on 5%
 

@@ -105,13 +105,14 @@ class BaseSimulationClass:
         self,
         alternative: Literal["less", "greater", "two-sided"],
         stattests_list: List[str],
-        sample_size: int,
+        treatment_sample_size: int,
+        treatment_split_proportion: float,
         experiments_num: int,
         mde: float,
         alpha_level: float = 0.05,
         power: float = 0.8,
     ):
-        self.sample_size = sample_size
+        self.treatment_sample_size = treatment_sample_size
         self.alternative = alternative
         self.mde = mde
         self.power = power
@@ -120,6 +121,9 @@ class BaseSimulationClass:
         self.experiments_num = experiments_num
         self.info = {}
         self.stattests_func_map = {}
+
+        control_group_increase_coef = (1 - treatment_split_proportion) / treatment_split_proportion
+        self.control_sample_size = int(self.treatment_sample_size * control_group_increase_coef)
 
     def plot_p_values(self):
         """

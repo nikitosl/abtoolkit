@@ -25,7 +25,8 @@ class StatTestsSimulation(BaseSimulationClass):
         variable: pd.Series,
         alternative: Literal["less", "greater", "two-sided"],
         stattests_list: List[str],
-        sample_size: int,
+        treatment_sample_size: int,
+        treatment_split_proportion: float,
         experiments_num: int,
         mde: float,
         alpha_level: float = 0.05,
@@ -40,7 +41,8 @@ class StatTestsSimulation(BaseSimulationClass):
 
         :param variable: variable for simulation
         :param stattests_list: list of stat-tests for estimation
-        :param sample_size: number of examples to sample from variables in each iteration
+        :param treatment_sample_size: number of examples to sample from variables in each iteration
+        :param treatment_split_proportion: proportion of ab split for test group (50/50 -> 0.5, 80/20 -> 0.2, ...)
         :param experiments_num: number of experiments to perform for each stat-test
         :param mde: minimal detectable effect, used to perform AB test (add to test variable)
         :param alpha_level: test alpha-level
@@ -53,7 +55,8 @@ class StatTestsSimulation(BaseSimulationClass):
         reduce variance of main variable and speedup test in 'regression_with_additional_variables' test
         """
         super().__init__(
-            sample_size=sample_size,
+            treatment_sample_size=treatment_sample_size,
+            treatment_split_proportion=treatment_split_proportion,
             alternative=alternative,
             mde=mde,
             power=power,
@@ -83,11 +86,11 @@ class StatTestsSimulation(BaseSimulationClass):
         :param mde: minimal detectable effect, to sum with test variable
         :return: p_value
         """
-        control_sample = self.variable.sample(self.sample_size, replace=True)
-        test_sample = self.variable.sample(self.sample_size, replace=True)
-        test_sample += mde
+        control_sample = self.variable.sample(self.control_sample_size, replace=True)
+        treatment_sample = self.variable.sample(self.treatment_sample_size, replace=True)
+        treatment_sample += mde
 
-        return ttest(control_sample, test_sample, self.alternative)
+        return ttest(control_sample, treatment_sample, self.alternative)
 
     def simulate_difference_ttest(self, mde: float) -> float:
         """
@@ -95,16 +98,20 @@ class StatTestsSimulation(BaseSimulationClass):
         :param mde: minimal detectable effect, to sum with test variable
         :return: p_value
         """
-        control_index_sample = self.variable.index[np.random.randint(0, len(self.variable), size=self.sample_size)]
-        test_index_sample = self.variable.index[np.random.randint(0, len(self.variable), size=self.sample_size)]
+        control_index_sample = self.variable.index[
+            np.random.randint(0, len(self.variable), size=self.control_sample_size)
+        ]
+        treatment_index_sample = self.variable.index[
+            np.random.randint(0, len(self.variable), size=self.treatment_sample_size)
+        ]
 
         control_sample = self.variable.loc[control_index_sample]
         control_pre_sample = self.previous_values.loc[control_index_sample]
-        test_sample = self.variable.loc[test_index_sample]
-        test_pre_sample = self.previous_values.loc[test_index_sample]
-        test_sample += mde
+        treatment_sample = self.variable.loc[treatment_index_sample]
+        treatment_pre_sample = self.previous_values.loc[treatment_index_sample]
+        treatment_sample += mde
 
-        return cuped_ttest(control_sample, control_pre_sample, test_sample, test_pre_sample, self.alternative)
+        return cuped_ttest(control_sample, control_pre_sample, treatment_sample, treatment_pre_sample, self.alternative)
 
     def simulate_cuped(self, mde: float) -> float:
         """
@@ -112,17 +119,21 @@ class StatTestsSimulation(BaseSimulationClass):
         :param mde: minimal detectable effect, to sum with test variable
         :return: p_value
         """
-        control_index_sample = self.variable.index[np.random.randint(0, len(self.variable), size=self.sample_size)]
-        test_index_sample = self.variable.index[np.random.randint(0, len(self.variable), size=self.sample_size)]
+        control_index_sample = self.variable.index[
+            np.random.randint(0, len(self.variable), size=self.control_sample_size)
+        ]
+        treatment_index_sample = self.variable.index[
+            np.random.randint(0, len(self.variable), size=self.treatment_sample_size)
+        ]
 
         control_sample = self.variable.loc[control_index_sample]
         control_covariant_sample = self.cuped_covariant.loc[control_index_sample]
-        test_sample = self.variable.loc[test_index_sample]
-        test_covariant_sample = self.cuped_covariant.loc[test_index_sample]
-        test_sample += mde
+        treatment_sample = self.variable.loc[treatment_index_sample]
+        treatment_covariant_sample = self.cuped_covariant.loc[treatment_index_sample]
+        treatment_sample += mde
 
         return cuped_ttest(
-            control_sample, control_covariant_sample, test_sample, test_covariant_sample, self.alternative
+            control_sample, control_covariant_sample, treatment_sample, treatment_covariant_sample, self.alternative
         )
 
     def simulate_reg(self, mde: float) -> float:
@@ -131,11 +142,11 @@ class StatTestsSimulation(BaseSimulationClass):
         :param mde: minimal detectable effect, to sum with test variable
         :return: p_value
         """
-        control_sample = self.variable.sample(self.sample_size, replace=True)
-        test_sample = self.variable.sample(self.sample_size, replace=True)
-        test_sample += mde
+        control_sample = self.variable.sample(self.control_sample_size, replace=True)
+        treatment_sample = self.variable.sample(self.treatment_sample_size, replace=True)
+        treatment_sample += mde
 
-        return regression_test(control_sample, test_sample, self.alternative)
+        return regression_test(control_sample, treatment_sample, self.alternative)
 
     def simulate_reg_did(self, mde: float) -> float:
         """
@@ -143,17 +154,21 @@ class StatTestsSimulation(BaseSimulationClass):
         :param mde: minimal detectable effect, to sum with test variable
         :return: p_value
         """
-        control_index_sample = self.variable.index[np.random.randint(0, len(self.variable), size=self.sample_size)]
-        test_index_sample = self.variable.index[np.random.randint(0, len(self.variable), size=self.sample_size)]
+        control_index_sample = self.variable.index[
+            np.random.randint(0, len(self.variable), size=self.control_sample_size)
+        ]
+        treatment_index_sample = self.variable.index[
+            np.random.randint(0, len(self.variable), size=self.treatment_sample_size)
+        ]
 
         control_sample = self.variable.loc[control_index_sample]
         control_previous_sample = self.previous_values.loc[control_index_sample]
-        test_sample = self.variable.loc[test_index_sample]
-        test_previous_sample = self.previous_values.loc[test_index_sample]
-        test_sample += mde
+        treatment_sample = self.variable.loc[treatment_index_sample]
+        treatment_previous_sample = self.previous_values.loc[treatment_index_sample]
+        treatment_sample += mde
 
         return did_regression_test(
-            control_sample, control_previous_sample, test_sample, test_previous_sample, self.alternative
+            control_sample, control_previous_sample, treatment_sample, treatment_previous_sample, self.alternative
         )
 
     def simulate_reg_add(self, mde: float) -> float:
@@ -162,15 +177,19 @@ class StatTestsSimulation(BaseSimulationClass):
         :param mde: minimal detectable effect, to sum with test variable
         :return: p_value
         """
-        control_index_sample = self.variable.index[np.random.randint(0, len(self.variable), size=self.sample_size)]
-        test_index_sample = self.variable.index[np.random.randint(0, len(self.variable), size=self.sample_size)]
+        control_index_sample = self.variable.index[
+            np.random.randint(0, len(self.variable), size=self.control_sample_size)
+        ]
+        treatment_index_sample = self.variable.index[
+            np.random.randint(0, len(self.variable), size=self.treatment_sample_size)
+        ]
 
         control_sample = self.variable.loc[control_index_sample]
         control_add_samples = [a.loc[control_index_sample] for a in self.additional_vars]
-        test_sample = self.variable.loc[test_index_sample]
-        test_add_samples = [a.loc[test_index_sample] for a in self.additional_vars]
-        test_sample += mde
+        treatment_sample = self.variable.loc[treatment_index_sample]
+        treatment_add_samples = [a.loc[treatment_index_sample] for a in self.additional_vars]
+        treatment_sample += mde
 
         return additional_vars_regression_test(
-            control_sample, control_add_samples, test_sample, test_add_samples, self.alternative
+            control_sample, control_add_samples, treatment_sample, treatment_add_samples, self.alternative
         )

@@ -23,7 +23,8 @@ class StatTestsSimulation(BaseSimulationClass):
         objects_num: int,
         alternative: Literal["less", "greater", "two-sided"],
         stattests_list: List[str],
-        sample_size: int,
+        treatment_sample_size: int,
+        treatment_split_proportion: float,
         experiments_num: int,
         mde: float,
         alpha_level: float = 0.05,
@@ -38,16 +39,18 @@ class StatTestsSimulation(BaseSimulationClass):
         :param count: number of positive samples in dataset
         :param objects_num: number of all samples in dataset
         :param stattests_list: list of stat-tests for estimation
-        :param sample_size: number of examples to sample from variables in each iteration
+        :param treatment_sample_size: number of examples in test group to sample from variables in each iteration
         :param experiments_num: number of experiments to perform for each stat-test
         :param mde: minimal detectable effect, used to perform AB test (add to test variable)
+        :param treatment_split_proportion: proportion of ab split for test group (50/50 -> 0.5, 80/20 -> 0.2, ...)
         :param alpha_level: test alpha-level
         :param power: test power
         :param bayesian_prior_positives: prior positive examples for bayesian stattest (default = 1)
         :param bayesian_prior_negatives: prior negative examples for bayesian stattest (default = 1)
         """
         super().__init__(
-            sample_size=sample_size,
+            treatment_sample_size=treatment_sample_size,
+            treatment_split_proportion=treatment_split_proportion,
             alternative=alternative,
             mde=mde,
             power=power,
@@ -74,10 +77,12 @@ class StatTestsSimulation(BaseSimulationClass):
         :return: p_value
         """
 
-        control_count = np.random.binomial(n=self.sample_size, p=self.p)
-        test_count = np.random.binomial(n=self.sample_size, p=self.p + mde)
+        control_count = np.random.binomial(n=self.control_sample_size, p=self.p)
+        treatment_count = np.random.binomial(n=self.treatment_sample_size, p=self.p + mde)
 
-        return conversion_ztest(control_count, self.sample_size, test_count, self.sample_size, self.alternative)
+        return conversion_ztest(
+            control_count, self.control_sample_size, treatment_count, self.treatment_sample_size, self.alternative
+        )
 
     def simulate_chi_square_test(self, mde: float) -> float:
         """
@@ -86,10 +91,10 @@ class StatTestsSimulation(BaseSimulationClass):
         :return: p_value
         """
 
-        control_count = np.random.binomial(n=self.sample_size, p=self.p)
-        test_count = np.random.binomial(n=self.sample_size, p=self.p + mde)
+        control_count = np.random.binomial(n=self.control_sample_size, p=self.p)
+        treatment_count = np.random.binomial(n=self.treatment_sample_size, p=self.p + mde)
 
-        return chi_square_test(control_count, self.sample_size, test_count, self.sample_size)
+        return chi_square_test(control_count, self.control_sample_size, treatment_count, self.treatment_sample_size)
 
     def simulate_bayesian_test(self, mde: float) -> float:
         """
@@ -98,14 +103,14 @@ class StatTestsSimulation(BaseSimulationClass):
         :return: p_value
         """
 
-        control_count = np.random.binomial(n=self.sample_size, p=self.p)
-        test_count = np.random.binomial(n=self.sample_size, p=self.p + mde)
+        control_count = np.random.binomial(n=self.control_sample_size, p=self.p)
+        treatment_count = np.random.binomial(n=self.treatment_sample_size, p=self.p + mde)
 
         return 1 - bayesian_test(
             control_count,
-            self.sample_size,
-            test_count,
-            self.sample_size,
+            self.control_sample_size,
+            treatment_count,
+            self.treatment_sample_size,
             self.alternative,
             self.bayesian_prior_positives,
             self.bayesian_prior_negatives,

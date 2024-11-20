@@ -25,8 +25,8 @@ def estimate_sample_size_by_mde(
     :param mde: minimal detectable effect, the difference in results to detect
     :param alternative: alternative hypothesis ("less", "greater" or "two-sided").
     * 'two-sided' : means are equal;
-    * 'less': the mean of the control sample is less than the mean of the test sample;
-    * 'greater': the mean of the control sample is greater than the mean of the test sample;
+    * 'less': the mean of the control sample is less than the mean of the treated sample;
+    * 'greater': the mean of the control sample is greater than the mean of the treated sample;
     :return: sample size needed for each group
     """
 
@@ -54,11 +54,11 @@ def estimate_mde_by_sample_size(
     :param alpha: level of significance of A/B test
     :param power: probability of observing a statistically significant result at level alpha
     if a true effect of a certain magnitude is present
-    :param sample_size: number of users in each group (test and control)
+    :param sample_size: number of users in each group (treatment and control)
     :param alternative: alternative hypothesis ("less", "greater" or "two-sided").
     * 'two-sided' : means are equal;
-    * 'less': the mean of the control sample is less than the mean of the test sample;
-    * 'greater': the mean of the control sample is greater than the mean of the test sample;
+    * 'less': the mean of the control sample is less than the mean of the treated sample;
+    * 'greater': the mean of the control sample is greater than the mean of the treated sample;
     :return: minimum detectable effect
     """
 

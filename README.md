@@ -35,7 +35,8 @@ simulation = StatTestsSimulation(
                         
         alternative=alternative,
         experiments_num=experiments_num,
-        sample_size=sample_size,
+        treatment_sample_size=sample_size,
+        treatment_split_proportion=0.5,
         mde=mde,
         alpha_level=alpha_level,
 
@@ -55,19 +56,19 @@ Output:
 Full example of usage you can find in ```examples/continuous_var_analysis.py``` script.
 
 #### Next stat tests implemented for treatment effect estimation:
-- ***T-Test*** - estimates treatment effect by comparing variables between test and control groups.
+- ***T-Test*** - estimates treatment effect by comparing variables between treatment and control groups.
 - ***Difference T-Test*** - estimates treatment effect by comparing difference between actual and previous values 
-of variables in test and control groups.
+of variables in treatment and control groups.
 - ***Regression Test*** - estimates treatment effect using linear regression by tested predicting variable. 
 Fact of treatment represented in model as binary flag (treated or not). Weight for this flag show significant 
 of treatment impact.
 ```y = bias + w * treated```
 - ***Regression Difference-in-Difference Test*** - estimates treatment effect using linear regression by predicting
-difference between test and control groups whist represented as difference between current variable value and 
+difference between treatment and control groups whist represented as difference between current variable value and 
 previous period variable value (two differences). Weight for treated and current variable values shows 
 significant of treatment. ```y = bias + w0 * treated + w1 * after + w2 * treated * after```
-- ***CUPED*** - estimates treatment effect by comparing variables between test and control groups and uses covariant 
-to reduce variance and speedup test. ```y = y - Q * covariant```, where ```Q = cov(y, covariant) / var(covariant)```. 
+- ***CUPED*** - estimates treatment effect by comparing variables between treatment and control groups 
+and uses covariant to reduce variance and speedup test. ```y = y - Q * covariant```, where ```Q = cov(y, covariant) / var(covariant)```. 
 Cuped variable has same mean value (unbiased), but smaller variance, that speedup test.
 - ***Regression with Additional Variables*** - estimates treatment effect using linear regression by predicting 
 tested variable with additional variables, which describe part of main variable variance and speedup test. 
@@ -98,7 +99,8 @@ sim = StatTestsSimulation(
     stattests_list=["conversion_ztest", "bayesian_test", "chi_square_test"],
     alternative=alternative,
     experiments_num=experiments_num,  # Run each stattest 10 times
-    sample_size=sample_size,  # Take 50 samples from variables
+    treatment_sample_size=sample_size,
+    treatment_split_proportion=0.5,
     mde=mde,  # Trying to detect this effect (very big for our simulated data)
     alpha_level=alpha_level,  # Fix alpha level on 5%
     power=power,

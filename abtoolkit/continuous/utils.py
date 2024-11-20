@@ -25,8 +25,8 @@ def estimate_confidence_interval(
     :param power: power
     :param alternative: alternative hypothesis ("less", "greater" or "two-sided").
     * 'two-sided' : means are equal;
-    * 'less': the mean of the control sample is less than the mean of the test sample;
-    * 'greater': the mean of the control sample is greater than the mean of the test sample;
+    * 'less': the mean of the control sample is less than the mean of the treated sample;
+    * 'greater': the mean of the control sample is greater than the mean of the treated sample;
     :return: low confidence interval value, high confidence interval value
     """
     if alternative == "two-sided":
@@ -47,15 +47,15 @@ def estimate_sample_size_by_mde(
 ) -> int:
     """
     Calculate sample size need for significant ttest using std, alpha, power, mde
-    :param std: tested variable std
+    :param std: treated variable std
     :param alpha: level of significance of A/B test
     :param power: probability of observing a statistically significant result at level alpha
     if a true effect of a certain magnitude is present
     :param mde: minimal detectable effect, the difference in results to detect
     :param alternative: alternative hypothesis ("less", "greater" or "two-sided").
     * 'two-sided' : means are equal;
-    * 'less': the mean of the control sample is less than the mean of the test sample;
-    * 'greater': the mean of the control sample is greater than the mean of the test sample;
+    * 'less': the mean of the control sample is less than the mean of the treated sample;
+    * 'greater': the mean of the control sample is greater than the mean of the treated sample;
     :return: sample size needed for each group
     """
 
@@ -77,15 +77,15 @@ def estimate_mde_by_sample_size(
 ):
     """
     Calculate sample size need for significant ttest using std, alpha, power, mde
-    :param std: tested variable std
+    :param std: treated variable std
     :param alpha: level of significance of A/B test
     :param power: probability of observing a statistically significant result at level alpha
     if a true effect of a certain magnitude is present
     :param sample_size: sample size needed for each group
     :param alternative: alternative hypothesis ("less", "greater" or "two-sided").
     * 'two-sided' : means are equal;
-    * 'less': the mean of the control sample is less than the mean of the test sample;
-    * 'greater': the mean of the control sample is greater than the mean of the test sample;
+    * 'less': the mean of the control sample is less than the mean of the treated sample;
+    * 'greater': the mean of the control sample is greater than the mean of the treated sample;
     :return: minimal detectable effect, the difference in results to detect
     """
     if alternative == "two-sided":
