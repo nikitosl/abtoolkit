@@ -7,6 +7,7 @@ from typing import List, Literal
 import numpy as np
 
 from abtoolkit.discrete.stattests import conversion_ztest
+from abtoolkit.discrete.stattests import chi_square_test
 from abtoolkit.discrete.stattests import bayesian_test
 from abtoolkit.utils import BaseSimulationClass
 
@@ -61,6 +62,7 @@ class StatTestsSimulation(BaseSimulationClass):
         self.stattests_func_map = {
             "conversion_ztest": self.simulate_conversion_ztest,
             "bayesian_test": self.simulate_bayesian_test,
+            "chi_square_test": self.simulate_chi_square_test,
         }
         self.bayesian_prior_positives = bayesian_prior_positives
         self.bayesian_prior_negatives = bayesian_prior_negatives
@@ -76,6 +78,18 @@ class StatTestsSimulation(BaseSimulationClass):
         test_count = np.random.binomial(n=self.sample_size, p=self.p + mde)
 
         return conversion_ztest(control_count, self.sample_size, test_count, self.sample_size, self.alternative)
+
+    def simulate_chi_square_test(self, mde: float) -> float:
+        """
+        Simulate chi-square test
+        :param mde: minimal detectable effect, to sum with test variable
+        :return: p_value
+        """
+
+        control_count = np.random.binomial(n=self.sample_size, p=self.p)
+        test_count = np.random.binomial(n=self.sample_size, p=self.p + mde)
+
+        return chi_square_test(control_count, self.sample_size, test_count, self.sample_size)
 
     def simulate_bayesian_test(self, mde: float) -> float:
         """

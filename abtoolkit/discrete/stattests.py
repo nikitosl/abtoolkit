@@ -79,3 +79,31 @@ def bayesian_test(
         return probability
 
     return 1 - probability
+
+
+def chi_square_test(
+    control_count: int,
+    control_objects_num: int,
+    test_count: int,
+    test_objects_num: int,
+) -> float:
+    """
+    Chi-square test
+    :param control_count: number of positive samples in control group
+    :param control_objects_num: number of all samples in control group
+    :param test_count: number of positive samples in test group
+    :param test_objects_num: number of all samples in test group
+    :return: p-value
+    """
+
+    control_negative_count = control_objects_num - control_count
+    test_negative_count = test_objects_num - test_count
+
+    if control_negative_count < 5 or control_count < 5 or test_negative_count < 5 or test_count < 5:
+        raise ValueError("Too few samples for chi-square test (>= 5 in each case)")
+
+    contingency_table = [[control_count, control_negative_count], [test_count, test_negative_count]]
+
+    _, pvalue, _, _ = stats.chi2_contingency(contingency_table, correction=True)
+
+    return pvalue

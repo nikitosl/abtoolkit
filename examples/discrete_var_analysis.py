@@ -7,12 +7,12 @@ from abtoolkit.utils import generate_data
 
 if __name__ == '__main__':
     # Fix global params
-    mde = 0.05
+    mde = -0.05
     alpha_level = 0.05
     power = 0.8
-    examples_num = 2000  # Number of examples in test and control group
-    experiments_num = 1000  # Number of experiments to run for each stattest
-    alternative = 'less'
+    examples_num = 500  # Number of examples in test and control group
+    experiments_num = 3000  # Number of experiments to run for each stattest
+    alternative = 'greater'
 
     # Generate variable
     variable = generate_data(examples_num, distribution_type="disc")
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     sim = StatTestsSimulation(
         count=variable.sum(),
         objects_num=variable.count(),
-        stattests_list=["conversion_ztest", "bayesian_test"],
+        stattests_list=["conversion_ztest", "bayesian_test", "chi_square_test"],
         alternative=alternative,
         experiments_num=experiments_num,  # Run each stattest 10 times
         sample_size=sample_size,  # Take 50 samples from variables

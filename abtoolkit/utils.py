@@ -62,7 +62,8 @@ def generate_data(
     index: Union[pd.Index, pd.MultiIndex] = None,
 ) -> pd.Series:
     """
-    Generates data for continuous variables test. Regression technique require special multi-index [entity, dt].
+    Generates data for continuous and discrete variables test.
+    Regression technique require special multi-index [entity, dt].
     :param size: sample size for generation
     :param distribution_type: type of variable for generation
     * cont - continuous variable from normal distribution with mean=0 and std=3
