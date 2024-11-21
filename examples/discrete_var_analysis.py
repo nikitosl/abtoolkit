@@ -30,7 +30,7 @@ if __name__ == '__main__':
         alternative=alternative,
         experiments_num=experiments_num,  # Run each stattest 10 times
         treatment_sample_size=sample_size,  # Take 50 samples from variables
-        treatment_split_proportion=0.5,
+        treatment_split_proportion=0.2,
         mde=mde,  # Trying to detect this effect (very big for our simulated data)
         alpha_level=alpha_level,  # Fix alpha level on 5%
         power=power,

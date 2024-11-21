@@ -267,7 +267,6 @@ def additional_vars_regression_test(
     control_df = pd.concat([control.rename("value").to_frame()] + control_additional_vars, axis=1)
     treatment_df = pd.concat([treatment.rename("value").to_frame()] + treatment_additional_vars, axis=1)
 
-    control_df.index = treatment_df.index
     df = pd.concat(
         [
             control_df.assign(treated=0),

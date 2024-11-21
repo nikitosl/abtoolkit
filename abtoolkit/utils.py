@@ -204,7 +204,12 @@ class BaseSimulationClass:
         test_pvalues_effect = []
 
         for _ in tqdm(range(self.experiments_num), desc=f"Simulation test '{test_name}'"):
-            p_value = stattest_func(mde=0)
+            try:
+                p_value = stattest_func(mde=0)
+            except ValueError as e:
+                print(f"error accured in test {test_name}: {e}")
+                continue
+
             test_pvalues_no_effect.append(p_value)
             if p_value < self.alpha_level:
                 test_success_no_effect_cnt += 1

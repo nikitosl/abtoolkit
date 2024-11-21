@@ -25,12 +25,18 @@ if __name__ == '__main__':
 
     sim = StatTestsSimulation(
         variable,
-        stattests_list=["ttest", "diff_ttest", "regression_test", "cuped_ttest", "did_regression_test",
-                        "additional_vars_regression_test"],
+        stattests_list=[
+            "ttest",
+            "diff_ttest",
+            "regression_test",
+            "cuped_ttest",
+            "did_regression_test",
+            "additional_vars_regression_test",
+        ],
         alternative=alternative,
         experiments_num=experiments_num,  # Run each stattest 10 times
         treatment_sample_size=sample_size,  # Take 50 samples from variables
-        treatment_split_proportion=0.5,  # Take 50 samples from variables
+        treatment_split_proportion=0.2,  # Take 50 samples from variables
         mde=mde,  # Trying to detect this effect (very big for our simulated data)
         alpha_level=alpha_level,  # Fix alpha level on 5%
 

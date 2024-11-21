@@ -29,14 +29,18 @@ confidence interval and plot of p-value distribution for different tests.
 from abtoolkit.continuous.simulation import StatTestsSimulation
 simulation = StatTestsSimulation(
         variable,
-        
-        stattests_list=["ttest", "diff_ttest", "regression_test", "cuped_ttest", "did_regression_test",
-                        "additional_vars_regression_test"],
-                        
+        stattests_list=[
+            "ttest",
+            "diff_ttest",
+            "regression_test",
+            "cuped_ttest",
+            "did_regression_test",
+            "additional_vars_regression_test",
+        ],           
         alternative=alternative,
         experiments_num=experiments_num,
         treatment_sample_size=sample_size,
-        treatment_split_proportion=0.5,
+        treatment_split_proportion=0.2,
         mde=mde,
         alpha_level=alpha_level,
 
