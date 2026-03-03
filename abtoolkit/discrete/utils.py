@@ -30,11 +30,8 @@ def estimate_sample_size_by_mde(
     :return: sample size needed for each group
     """
 
-    # Todo: When alternative = "less" or "greater" we get undersampling (power less then 0.8).
     if alternative == "two-sided":
-        pass
-
-    alpha = alpha / 2
+        alpha = alpha / 2
 
     z = stats.norm.ppf(q=1 - alpha) + stats.norm.ppf(q=power)
     size = 2 * p * (1 - p) * (z / mde) ** 2
@@ -62,11 +59,8 @@ def estimate_mde_by_sample_size(
     :return: minimum detectable effect
     """
 
-    # Todo: When alternative = "less" or "greater" we get undersampling (power less then 0.8).
     if alternative == "two-sided":
-        pass
-
-    alpha = alpha / 2
+        alpha = alpha / 2
 
     z = stats.norm.ppf(q=1 - alpha) + stats.norm.ppf(q=power)
     # size = 2 * p * (1 - p) * (z / mde) ** 2
