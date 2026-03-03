@@ -15,6 +15,19 @@ class TestSampleSizeEstimation(unittest.TestCase):
         self.assertTrue(isinstance(mde, float), "Estimated MDE has wrong type")
         self.assertTrue(mde > 0, f"Estimated MDE is negative: {mde}")
 
+
+    def test_one_sided_requires_smaller_sample_than_two_sided(self):
+        two_sided = estimate_sample_size_by_mde(0.07, 0.05, 0.8, 0.03, alternative="two-sided")
+        one_sided = estimate_sample_size_by_mde(0.07, 0.05, 0.8, 0.03, alternative="greater")
+
+        self.assertTrue(one_sided < two_sided, "One-sided test should require a smaller sample size")
+
+    def test_one_sided_has_smaller_mde_than_two_sided(self):
+        two_sided = estimate_mde_by_sample_size(0.07, 0.05, 0.8, 1136, alternative="two-sided")
+        one_sided = estimate_mde_by_sample_size(0.07, 0.05, 0.8, 1136, alternative="greater")
+
+        self.assertTrue(one_sided < two_sided, "One-sided test should detect a smaller MDE")
+
     def test_estimate_ci_binomial(self):
         ci = estimate_ci_binomial(0.07, 1136, 0.5)
         self.assertTrue(len(ci) == 2, f"Got wrong confidence interval: {ci}")
