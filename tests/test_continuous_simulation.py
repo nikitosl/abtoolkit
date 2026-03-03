@@ -1,4 +1,6 @@
 import unittest
+from unittest.mock import patch
+
 from abtoolkit.continuous.simulation import StatTestsSimulation
 from abtoolkit.utils import generate_data
 
@@ -106,3 +108,24 @@ class TestStatTestsSimulation(unittest.TestCase):
             self.assertTrue("ab_pvalues" in test_info, f"AB p-values not in result dict")
             self.assertTrue(len(test_info["ab_pvalues"]) == experiments_num,
                             f"Number of p-values in AB test doesn't match with number of experiments")
+
+
+    def test_diff_ttest_uses_difference_ttest(self):
+        variable = generate_data(30, distribution_type="cont")
+        previous_value = generate_data(30, distribution_type="cont", index=variable.index).rename("prev")
+
+        sim = StatTestsSimulation(
+            variable,
+            stattests_list=["diff_ttest"],
+            experiments_num=1,
+            alternative="two-sided",
+            treatment_sample_size=10,
+            treatment_split_proportion=0.5,
+            mde=1,
+            previous_values=previous_value,
+        )
+
+        with patch("abtoolkit.continuous.simulation.difference_ttest", return_value=0.5) as diff_mock:
+            sim.simulate_difference_ttest(mde=0)
+
+        self.assertTrue(diff_mock.called, "diff_ttest simulation should call difference_ttest")
