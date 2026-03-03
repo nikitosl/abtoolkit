@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "abtoolkit"
-version = "2.0.0"
+version = "2.0.1"
 authors = [
   { name="Nikita Altukhov", email="altuxov.nikita@gmail.com" },
 ]
@@ -32,6 +32,9 @@ Issues = "https://github.com/nikitosl/abtoolkit/issues"
 
 [tool.setuptools.packages]
 find = {}
+
+[tool.setuptools]
+license-files = []
 
 [tool.pylint.'MESSAGES CONTROL']
 max-line-length = 120
