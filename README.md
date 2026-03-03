@@ -144,12 +144,10 @@ You can find examples of toolkit usage in [examples/](https://github.com/nikitos
 This repository includes `.github/workflows/publish-pypi.yml`.
 
 How it works:
-- Trigger: when a GitHub Release is published (or manually via `workflow_dispatch`).
+- Trigger: when a GitHub Release is published.
 - Build: creates `sdist` and `wheel`.
-- Safety check: verifies release tag (for example, `v2.0.1`) matches `[project].version` in `pyproject.toml`.
 - Publish: uploads package to PyPI via Trusted Publishing (`pypa/gh-action-pypi-publish`).
 
 Required one-time setup:
 1. In PyPI project settings, configure a **Trusted Publisher** for this GitHub repository/workflow.
 2. In GitHub, keep workflow permissions as configured (`id-token: write` in the publish job).
-3. For every release, update `pyproject.toml` version first, then create a GitHub Release with the same tag.
