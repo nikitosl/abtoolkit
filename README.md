@@ -87,10 +87,11 @@ of treatment impact.
 from abtoolkit.discrete.utils import estimate_sample_size_by_mde
 
 estimate_sample_size_by_mde(
-    p, 
-    sample_size, 
-    alpha=0.05,
-    alternative="two-sided"
+    p=p,
+    alpha=alpha_level,
+    power=power,
+    mde=mde,
+    alternative="two-sided",
 )
 ```
 #### AA and AB tests simulation:

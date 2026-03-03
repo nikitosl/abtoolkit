@@ -9,6 +9,7 @@ import pandas as pd
 
 from abtoolkit.continuous.stattests import additional_vars_regression_test
 from abtoolkit.continuous.stattests import cuped_ttest
+from abtoolkit.continuous.stattests import difference_ttest
 from abtoolkit.continuous.stattests import did_regression_test
 from abtoolkit.continuous.stattests import regression_test
 from abtoolkit.continuous.stattests import ttest
@@ -111,7 +112,13 @@ class StatTestsSimulation(BaseSimulationClass):
         treatment_pre_sample = self.previous_values.loc[treatment_index_sample]
         treatment_sample += mde
 
-        return cuped_ttest(control_sample, control_pre_sample, treatment_sample, treatment_pre_sample, self.alternative)
+        return difference_ttest(
+            control_sample,
+            control_pre_sample,
+            treatment_sample,
+            treatment_pre_sample,
+            self.alternative,
+        )
 
     def simulate_cuped(self, mde: float) -> float:
         """
