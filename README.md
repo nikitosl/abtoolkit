@@ -140,3 +140,14 @@ p_value = check_clt(var, do_plot_distribution=True)
 
 ---
 You can find examples of toolkit usage in [examples/](https://github.com/nikitosl/abtoolkit/tree/master/examples) directory.
+## Automatic publishing to PyPI (GitHub Actions)
+This repository includes `.github/workflows/publish-pypi.yml`.
+
+How it works:
+- Trigger: when a GitHub Release is published.
+- Build: creates `sdist` and `wheel`.
+- Publish: uploads package to PyPI via Trusted Publishing (`pypa/gh-action-pypi-publish`).
+
+Required one-time setup:
+1. In PyPI project settings, configure a **Trusted Publisher** for this GitHub repository/workflow.
+2. In GitHub, keep workflow permissions as configured (`id-token: write` in the publish job).
