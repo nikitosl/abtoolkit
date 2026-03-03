@@ -122,10 +122,9 @@ class TestStatTestsSimulation(unittest.TestCase):
             )
 
             self.assertTrue("ab_pvalues" in test_info, f"AB p-values not in result dict")
-            self.assertTrue(
-                len(test_info["ab_pvalues"]) == experiments_num,
-                f"Number of p-values in AB test doesn't match with number of experiments",
-            )
+            self.assertTrue(len(test_info["ab_pvalues"]) == experiments_num,
+                            f"Number of p-values in AB test doesn't match with number of experiments")
+
 
     def test_diff_ttest_uses_difference_ttest(self):
         variable = generate_data(30, distribution_type="cont")
