@@ -15,7 +15,6 @@ class TestSampleSizeEstimation(unittest.TestCase):
         self.assertTrue(isinstance(mde, float), "Estimated MDE has wrong type")
         self.assertTrue(mde > 0, f"Estimated MDE is negative: {mde}")
 
-
     def test_one_sided_requires_smaller_sample_than_two_sided(self):
         two_sided = estimate_sample_size_by_mde(0.07, 0.05, 0.8, 0.03, alternative="two-sided")
         one_sided = estimate_sample_size_by_mde(0.07, 0.05, 0.8, 0.03, alternative="greater")
