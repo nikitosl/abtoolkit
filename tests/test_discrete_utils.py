@@ -33,3 +33,11 @@ class TestSampleSizeEstimation(unittest.TestCase):
         self.assertTrue(len(ci) == 2, f"Got wrong confidence interval: {ci}")
         self.assertTrue(ci[0] > 0, f"Estimated ci has negative value: {ci[0]}")
         self.assertTrue(ci[1] > 0, f"Estimated ci has negative value: {ci[1]}")
+
+    def test_invalid_alternative_for_sample_size(self):
+        with self.assertRaises(ValueError):
+            estimate_sample_size_by_mde(0.07, 0.05, 0.8, 0.03, alternative="invalid")
+
+    def test_invalid_alternative_for_mde(self):
+        with self.assertRaises(ValueError):
+            estimate_mde_by_sample_size(0.07, 0.05, 0.8, 1136, alternative="invalid")

@@ -30,6 +30,9 @@ def estimate_sample_size_by_mde(
     :return: sample size needed for each group
     """
 
+    if alternative not in {"less", "greater", "two-sided"}:
+        raise ValueError("alternative must be 'less', 'greater' or 'two-sided'")
+
     if alternative == "two-sided":
         alpha = alpha / 2
 
@@ -58,6 +61,9 @@ def estimate_mde_by_sample_size(
     * 'greater': the mean of the control sample is greater than the mean of the treated sample;
     :return: minimum detectable effect
     """
+
+    if alternative not in {"less", "greater", "two-sided"}:
+        raise ValueError("alternative must be 'less', 'greater' or 'two-sided'")
 
     if alternative == "two-sided":
         alpha = alpha / 2
