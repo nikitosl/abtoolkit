@@ -33,6 +33,9 @@ Issues = "https://github.com/nikitosl/abtoolkit/issues"
 [tool.setuptools.packages]
 find = {}
 
+[tool.setuptools]
+license-files = []
+
 [tool.pylint.'MESSAGES CONTROL']
 max-line-length = 120
 disable = "too-many-instance-attributes, too-many-arguments, too-many-locals, no-member, fixme, duplicate-code"
